@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /obrigado
+Disallow: /api/
+
+Sitemap: https://pmvp.pt/sitemap.xml

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#1F3B2D" />
+  <g stroke="#D9D3C7" stroke-opacity="0.12" stroke-width="1">
+    <line x1="0" y1="126" x2="1200" y2="126" />
+    <line x1="0" y1="252" x2="1200" y2="252" />
+    <line x1="0" y1="378" x2="1200" y2="378" />
+    <line x1="0" y1="504" x2="1200" y2="504" />
+    <line x1="240" y1="0" x2="240" y2="630" />
+    <line x1="480" y1="0" x2="480" y2="630" />
+    <line x1="720" y1="0" x2="720" y2="630" />
+    <line x1="960" y1="0" x2="960" y2="630" />
+  </g>
+  <polygon points="730,130 1080,165 1110,450 780,490 680,310" fill="#B5653A" fill-opacity="0.22" stroke="#B5653A" stroke-width="4" />
+  <rect x="80" y="90" width="76" height="76" rx="10" fill="#F2EEE6" />
+  <text x="118" y="140" text-anchor="middle" font-family="Georgia, serif" font-size="34" font-weight="bold" fill="#1F3B2D">PM</text>
+  <text x="80" y="250" font-family="Georgia, serif" font-size="58" font-weight="bold" fill="#FFFFFF">PMVP · Terrenos &amp; Urbanismo</text>
+  <text x="80" y="325" font-family="Arial, sans-serif" font-size="30" fill="#F2EEE6">Descobrimos o potencial. Desenvolvemos o valor.</text>
+  <text x="80" y="420" font-family="Arial, sans-serif" font-size="22" fill="#D9D3C7">Grande Lisboa · Análise de PDM, Condicionantes e Viabilidade</text>
+  <rect x="80" y="475" width="360" height="58" rx="8" fill="#B5653A" />
+  <text x="260" y="512" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#FFFFFF">Raio-X do Terreno · 5 dias úteis</text>
+</svg>

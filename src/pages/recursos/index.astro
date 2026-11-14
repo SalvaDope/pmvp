@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+const categories = ['Todos', ...Array.from(new Set(SITE_CONFIG.articles.map((a) => a.category)))];
+const { raioX } = SITE_CONFIG.products;
+---
+
+<BaseLayout
+  title="Recursos e Artigos sobre Terrenos e Urbanismo | PMVP"
+  description="Guias práticos e artigos sobre viabilidade de terrenos, construção em solo rústico, RAN, REN, PIP, PDM e BUPi na Grande Lisboa."
+>
+  <section class="py-12 sm:py-16 lg:py-20 bg-stone/70 border-b border-border">
+    <div class="container-pmvp max-w-4xl">
+      <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+        Recursos & Conhecimento Técnico
+      </span>
+      <h1 class="mt-2 font-serif text-3xl sm:text-5xl font-semibold text-pine">
+        Artigos sobre terrenos, PDM e urbanismo
+      </h1>
+      <p class="mt-4 text-base sm:text-lg text-graphite leading-relaxed">
+        Explicamos em linguagem clara a legislação urbanística, as condicionantes e os passos essenciais para comprar, herdar, valorizar ou vender um terreno.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12 sm:py-16 lg:py-24 bg-white">
+    <div class="container-pmvp">
+      <!-- Filtro por Categoria -->
+      <div class="flex flex-wrap items-center gap-2 mb-10" role="group" aria-label="Filtrar artigos por categoria">
+        {categories.map((cat, idx) => (
+          <button
+            type="button"
+            data-filter-category={cat}
+            class:list={[
+              'rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium border transition-colors',
+              idx === 0
+                ? 'bg-pine text-white border-pine'
+                : 'bg-stone/50 text-graphite border-border hover:border-pine',
+            ]}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      <!-- Grelha dos 8 Artigos -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7" id="articles-grid">
+        {SITE_CONFIG.articles.map((article) => (
+          <article
+            data-article-category={article.category}
+            class="card-pmvp flex flex-col justify-between hover:border-pine group"
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 text-xs text-graphite-muted mb-3">
+                <span class="rounded bg-stone px-2.5 py-1 font-semibold text-pine">
+                  {article.category}
+                </span>
+                <span>{article.publishedLabel} · {article.readingTime}</span>
+              </div>
+
+              <h2 class="font-serif text-xl font-semibold text-pine group-hover:text-terracotta transition-colors leading-snug">
+                <a href={`/recursos/${article.slug}`} class="focus:outline-none">
+                  {article.title}
+                </a>
+              </h2>
+
+              <p class="mt-3 text-sm text-graphite-muted leading-relaxed">
+                {article.excerpt}
+              </p>
+
+              <div class="mt-4">
+                <span class="placeholder-tag text-[11px]">
+                  {article.imagePlaceholder}
+                </span>
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-border/70 flex items-center justify-between text-xs font-semibold text-pine">
+              <a href={`/recursos/${article.slug}`} class="hover:underline">
+                Ler artigo completo
+              </a>
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Banner CTA Raio-X -->
+      <div class="mt-16 rounded-xl bg-pine text-white p-8 sm:p-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        <div class="max-w-2xl space-y-2">
+          <span class="inline-block rounded bg-terracotta px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-white">
+            Caso concreto?
+          </span>
+          <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-white">
+            Quer aplicar esta análise ao seu terreno?
+          </h2>
+          <p class="text-sm sm:text-base text-stone/85">
+            Peça um <strong>{raioX.name}</strong> ({raioX.priceDisplay} {raioX.vatLabel} {raioX.placeholderTag}) e receba a primeira leitura técnica em {raioX.turnaround}.
+          </p>
+        </div>
+        <a
+          href={raioX.ctaHref}
+          data-track-cta="recursos_index_raiox"
+          data-track-product="raio-x"
+          class="btn-terracotta shrink-0"
+        >
+          {raioX.ctaLabel}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter-category]');
+  const cards = document.querySelectorAll<HTMLElement>('[data-article-category]');
+
+  buttons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const selected = btn.getAttribute('data-filter-category') || 'Todos';
+
+      buttons.forEach((b) => {
+        b.classList.remove('bg-pine', 'text-white', 'border-pine');
+        b.classList.add('bg-stone/50', 'text-graphite', 'border-border');
+      });
+      btn.classList.add('bg-pine', 'text-white', 'border-pine');
+      btn.classList.remove('bg-stone/50', 'text-graphite', 'border-border');
+
+      cards.forEach((card) => {
+        const cat = card.getAttribute('data-article-category');
+        if (selected === 'Todos' || cat === selected) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    });
+  });
+</script>

@@ -1,0 +1,57 @@
+---
+import SegmentPageLayout from '../../components/SegmentPageLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+const { raioX, estudo } = SITE_CONFIG.products;
+---
+
+<SegmentPageLayout
+  metaTitle="Vai Comprar um Terreno? Saiba o que Pode Construir | PMVP"
+  metaDescription="Antes de comprar um terreno ou assinar o CPCV, confirme a classificação no PDM e as condicionantes (RAN, REN, servidões). Análise independente na Grande Lisboa."
+  badge="Para quem vai comprar um terreno"
+  h1="Antes de comprar um terreno, saiba o que pode construir."
+  lead="Não avance para proposta ou Contrato-Promessa de Compra e Venda (CPCV) apenas com base na descrição comercial do anúncio. Validamos o que o PDM e as condicionantes realmente permitem."
+  imageMarker="[IMG: Análise de limites e condicionantes de parcela antes da compra]"
+  perfilId="comprar"
+  pains={[
+    {
+      title: 'Anúncios que prometem "viabilidade" sem fundamento',
+      description:
+        'Expressões como "com potencial construtivo" ou "junto a zona urbana" não garantem que a Câmara Municipal aprove qualquer edificação na parcela.',
+    },
+    {
+      title: 'Condicionantes descobertas depois da escritura',
+      description:
+        'Faixas de servidão de linhas elétricas, linhas de água do domínio hídrico, RAN ou REN podem impedir a implantação no local onde imaginava construir.',
+    },
+    {
+      title: 'Pagar preço de urbano por um terreno rústico',
+      description:
+        'Sem conhecer os índices urbanísticos aplicáveis e eventuais divergências de área documental, corre o risco de pagar um valor desajustado.',
+    },
+  ]}
+  howWeHelp={[
+    {
+      title: 'Triagem rápida antes de perder tempo (Raio-X)',
+      description:
+        'Em 5 dias úteis, verificamos o PDM e as principais condicionantes para saber se vale a pena visitar ou negociar o terreno.',
+    },
+    {
+      title: 'Segurança total antes do CPCV (Estudo de Viabilidade)',
+      description:
+        'Analisamos o regulamento do PDM ao detalhe, cruzamos a documentação (matriz, registo e BUPi/cadastro) e identificamos os parâmetros e riscos antes de entregar o sinal.',
+    },
+    {
+      title: 'Independência total na conclusão',
+      description:
+        'Não somos parte interessada na transação: o nosso único objetivo é dar-lhe os factos técnicos para negociar ou desistir a tempo.',
+    },
+  ]}
+  recommendedTitle="Raio-X antes da visita, Estudo antes do CPCV"
+  recommendedDescription="Se está a comparar opções, comece pelo Raio-X do Terreno. Se já escolheu o terreno e vai negociar ou assinar o CPCV, peça o Estudo de Viabilidade completo (o valor do Raio-X é descontado se avançar em 90 dias)."
+  recommendedPrice={`Raio-X: ${raioX.priceDisplay} · Estudo: ${estudo.priceDisplay} (IVA incl.) ${raioX.placeholderTag}`}
+  primaryCtaLabel="Analisar terreno que vou comprar"
+  primaryCtaHref="/submeter-terreno?perfil=comprar&produto=raio-x"
+  secondaryCtaLabel="Pedir Estudo antes do CPCV"
+  secondaryCtaHref="/submeter-terreno?perfil=comprar&produto=estudo"
+/>

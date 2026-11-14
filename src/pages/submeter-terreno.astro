@@ -1,0 +1,1247 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../config/site';
+import 'leaflet/dist/leaflet.css';
+---
+
+<BaseLayout
+  title="Submeter Terreno para Análise | PMVP — Terrenos & Urbanismo"
+  description="Envie os dados do seu terreno na Grande Lisboa para pedir um Raio-X do Terreno (190 €) ou um Estudo de Viabilidade. Confirmamos em 24 horas úteis."
+>
+  <section class="py-10 sm:py-14 bg-stone/50 border-b border-border">
+    <div class="container-pmvp max-w-4xl">
+      <div class="mb-8">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-pine/10 px-3 py-1 text-xs font-semibold text-pine">
+          Análise Técnica Independente · Resposta em 24 h úteis
+        </span>
+        <h1 class="mt-3 font-serif text-3xl sm:text-4xl font-semibold text-pine">
+          Analisar o meu terreno
+        </h1>
+        <p class="mt-2 text-base text-graphite-muted">
+          Preencha os 4 passos abaixo. O seu rascunho é guardado automaticamente enquanto preenche.
+        </p>
+      </div>
+
+      <!-- Barra de Progresso dos 4 Passos -->
+      <nav aria-label="Progresso do formulário" class="mb-8">
+        <ol class="grid grid-cols-4 gap-2 sm:gap-4">
+          {[
+            { step: 1, title: 'Quem é' },
+            { step: 2, title: 'O terreno' },
+            { step: 3, title: 'O objetivo' },
+            { step: 4, title: 'Contactos' },
+          ].map((item) => (
+            <li>
+              <button
+                type="button"
+                data-step-indicator={item.step}
+                class="w-full text-left rounded-lg border border-border bg-white p-2.5 sm:p-3.5 transition-all"
+              >
+                <div class="flex items-center gap-2">
+                  <span
+                    data-step-badge={item.step}
+                    class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-semibold bg-stone text-graphite"
+                  >
+                    {item.step}
+                  </span>
+                  <span
+                    data-step-label={item.step}
+                    class="text-xs sm:text-sm font-medium text-graphite truncate"
+                  >
+                    {item.title}
+                  </span>
+                </div>
+              </button>
+            </li>
+          ))}
+        </ol>
+        <div class="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-border/70">
+          <div
+            id="form-progress-bar"
+            class="h-full bg-pine transition-all duration-300"
+            style="width: 25%"
+          ></div>
+        </div>
+      </nav>
+
+      <!-- Alerta de Erro Global -->
+      <div
+        id="form-error-banner"
+        role="alert"
+        class="hidden mb-6 rounded-lg border border-terracotta bg-terracotta-muted p-4 text-sm text-pine-dark"
+      >
+        <div class="flex items-start gap-3">
+          <svg class="h-5 w-5 text-terracotta shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+          </svg>
+          <div>
+            <p class="font-semibold text-terracotta-dark">Verifique os seguintes dados:</p>
+            <p id="form-error-message" class="mt-0.5 text-graphite"></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário Principal -->
+      <form
+        id="terreno-form"
+        action="/api/submeter-terreno"
+        method="POST"
+        enctype="multipart/form-data"
+        novalidate
+        class="rounded-xl border border-border bg-white p-6 sm:p-8 shadow-sm"
+      >
+        <!-- Honeypot Anti-Spam (oculto para utilizadores reais) -->
+        <div class="hidden" aria-hidden="true">
+          <label for="website_url_hp">Não preencha este campo</label>
+          <input type="text" id="website_url_hp" name="website_url_hp" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <!-- ============================================================== -->
+        <!-- PASSO 1 — QUEM É                                               -->
+        <!-- ============================================================== -->
+        <fieldset id="step-1" data-step-panel="1" class="space-y-6">
+          <div>
+            <legend class="font-serif text-xl sm:text-2xl font-semibold text-pine">
+              Passo 1 — Quem é
+            </legend>
+            <p class="mt-1 text-sm text-graphite-muted">
+              Selecione a opção que melhor descreve a sua relação com o terreno. <span class="text-terracotta font-medium">*</span>
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {SITE_CONFIG.formOptions.profiles.map((prof) => (
+              <label
+                class="profile-card relative flex cursor-pointer flex-col justify-between rounded-lg border border-border bg-white p-4 hover:border-pine/60 hover:bg-stone/30 transition-all"
+              >
+                <div class="flex items-start gap-3">
+                  <input
+                    type="radio"
+                    name="perfil"
+                    value={prof.id}
+                    required
+                    class="mt-1 h-4 w-4 border-border text-pine focus:ring-pine"
+                  />
+                  <div>
+                    <span class="block font-serif text-base font-semibold text-pine">
+                      {prof.label}
+                    </span>
+                    <span class="mt-1 block text-xs sm:text-sm text-graphite-muted leading-relaxed">
+                      {prof.description}
+                    </span>
+                  </div>
+                </div>
+              </label>
+            ))}
+          </div>
+
+          <div class="flex items-center justify-end pt-4 border-t border-border">
+            <button
+              type="button"
+              data-next-step="2"
+              class="btn-primary w-full sm:w-auto"
+            >
+              <span>Continuar para o terreno</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </fieldset>
+
+        <!-- ============================================================== -->
+        <!-- PASSO 2 — O TERRENO                                            -->
+        <!-- ============================================================== -->
+        <fieldset id="step-2" data-step-panel="2" class="hidden space-y-6">
+          <div>
+            <legend class="font-serif text-xl sm:text-2xl font-semibold text-pine">
+              Passo 2 — O terreno
+            </legend>
+            <p class="mt-1 text-sm text-graphite-muted">
+              Indique o concelho e a localização do terreno (através de um pin no mapa, morada ou coordenadas).
+            </p>
+          </div>
+
+          <!-- Concelho e Freguesia -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="concelho" class="block text-sm font-medium text-pine mb-1.5">
+                Concelho <span class="text-terracotta">*</span>
+              </label>
+              <select
+                id="concelho"
+                name="concelho"
+                required
+                class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite focus:border-pine"
+              >
+                <option value="">Selecione o concelho...</option>
+                {SITE_CONFIG.geography.municipalities.map((mun) => (
+                  <option value={mun}>{mun}</option>
+                ))}
+                <option value="Outro">Outro concelho</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="freguesia" class="block text-sm font-medium text-pine mb-1.5">
+                Freguesia <span class="text-xs font-normal text-graphite-muted">(opcional)</span>
+              </label>
+              <input
+                type="text"
+                id="freguesia"
+                name="freguesia"
+                placeholder="Ex.: São João das Lampas, Azeitão..."
+                class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite placeholder:text-graphite-light"
+              />
+            </div>
+          </div>
+
+          <!-- Campo adicional quando Concelho === 'Outro' -->
+          <div id="concelho-outro-wrapper" class="hidden">
+            <label for="concelho_outro" class="block text-sm font-medium text-pine mb-1.5">
+              Qual o concelho? <span class="text-terracotta">*</span>
+            </label>
+            <input
+              type="text"
+              id="concelho_outro"
+              name="concelho_outro"
+              placeholder="Indique o nome do concelho"
+              class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite"
+            />
+          </div>
+
+          <!-- Bloco de Localização (Mapa + Coordenadas + Morada) -->
+          <div class="rounded-lg border border-border bg-stone/40 p-4 sm:p-5 space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <div>
+                <h3 class="font-serif text-base font-semibold text-pine">
+                  Localização do terreno <span class="text-terracotta">*</span>
+                </h3>
+                <p class="text-xs text-graphite-muted">
+                  Preencha pelo menos um: clique no mapa para largar um pin, escreva a morada/descrição ou introduza as coordenadas.
+                </p>
+              </div>
+
+              <!-- Alternância Rua / Ortofoto DGT -->
+              <div class="inline-flex rounded-md border border-border bg-white p-0.5 shrink-0" role="group" aria-label="Camada do mapa">
+                <button
+                  type="button"
+                  id="map-layer-osm"
+                  class="rounded px-2.5 py-1 text-xs font-medium bg-pine text-white transition-colors"
+                >
+                  Mapa de Rua
+                </button>
+                <button
+                  type="button"
+                  id="map-layer-ortofoto"
+                  class="rounded px-2.5 py-1 text-xs font-medium text-graphite hover:text-pine transition-colors"
+                >
+                  Ortofoto (DGT)
+                </button>
+              </div>
+            </div>
+
+            <!-- Contentor do Mapa Leaflet -->
+            <div class="relative">
+              <div
+                id="terreno-map"
+                class="h-72 sm:h-80 w-full rounded-lg border border-border bg-stone z-10"
+                aria-label="Mapa interativo para selecionar a localização do terreno"
+              ></div>
+              <div class="mt-2 flex flex-wrap items-center justify-between gap-2 text-xs text-graphite-muted">
+                <span id="map-pin-status">
+                  Clique no mapa sobre o terreno para marcar as coordenadas exatas.
+                </span>
+                <div class="flex items-center gap-3">
+                  <a
+                    id="google-maps-preview"
+                    href="#"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hidden text-pine font-medium underline"
+                  >
+                    Ver no Google Maps ↗
+                  </a>
+                  <button
+                    type="button"
+                    id="clear-map-pin"
+                    class="hidden text-terracotta hover:underline font-medium"
+                  >
+                    Limpar pin
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label for="coordenadas" class="block text-xs font-semibold uppercase tracking-wider text-pine mb-1">
+                  Coordenadas ( preenchidas pelo pin ou manualmente )
+                </label>
+                <input
+                  type="text"
+                  id="coordenadas"
+                  name="coordenadas"
+                  placeholder="Ex.: 38.7954, -9.3812"
+                  class="w-full rounded-md border border-border bg-white px-3.5 py-2 text-sm font-mono text-graphite placeholder:font-sans placeholder:text-graphite-light"
+                />
+              </div>
+
+              <div>
+                <label for="morada" class="block text-xs font-semibold uppercase tracking-wider text-pine mb-1">
+                  Morada, estrada ou descrição de acesso
+                </label>
+                <input
+                  type="text"
+                  id="morada"
+                  name="morada"
+                  placeholder="Ex.: Estrada Nacional 247, junto ao km 14..."
+                  class="w-full rounded-md border border-border bg-white px-3.5 py-2 text-sm text-graphite placeholder:text-graphite-light"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Artigo Matricial e Área Aproximada -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label for="artigo_matricial" class="block text-sm font-medium text-pine mb-1.5">
+                Artigo matricial e secção <span class="text-xs font-normal text-graphite-muted">(opcional)</span>
+              </label>
+              <input
+                type="text"
+                id="artigo_matricial"
+                name="artigo_matricial"
+                placeholder="Ex.: Artigo 45, Secção G (Rústico)"
+                class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite placeholder:text-graphite-light"
+              />
+            </div>
+
+            <div>
+              <label for="area_valor" class="block text-sm font-medium text-pine mb-1.5">
+                Área aproximada <span class="text-xs font-normal text-graphite-muted">(opcional)</span>
+              </label>
+              <div class="flex rounded-md shadow-sm">
+                <input
+                  type="number"
+                  step="any"
+                  min="0"
+                  id="area_valor"
+                  name="area_valor"
+                  placeholder="Ex.: 5000"
+                  class="w-full rounded-l-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite placeholder:text-graphite-light"
+                />
+                <label for="area_unidade" class="sr-only">Unidade de área</label>
+                <select
+                  id="area_unidade"
+                  name="area_unidade"
+                  class="rounded-r-md border border-l-0 border-border bg-stone px-3 py-2.5 text-sm font-medium text-pine"
+                >
+                  <option value="m²">m²</option>
+                  <option value="ha">ha</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Upload de Documentos (Privado, até 3 ficheiros, máx 10 MB) -->
+          <div class="rounded-lg border border-dashed border-pine/40 bg-stone/30 p-4 sm:p-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <label for="documentos-input" class="block text-sm font-semibold text-pine cursor-pointer">
+                  Anexar documentos <span class="text-xs font-normal text-graphite-muted">(opcional — máx. 3 ficheiros)</span>
+                </label>
+                <p class="mt-0.5 text-xs text-graphite-muted">
+                  Caderneta predial, certidão do registo predial, localização BUPi ou plantas. Formatos aceites: <strong>PDF, JPG, PNG</strong> (até <strong>10 MB</strong> cada). Guardados em armazenamento privado.
+                </p>
+              </div>
+              <label
+                for="documentos-input"
+                class="btn-secondary text-xs sm:text-sm py-2 px-3.5 cursor-pointer shrink-0"
+              >
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                </svg>
+                <span>Escolher ficheiros</span>
+              </label>
+              <input
+                type="file"
+                id="documentos-input"
+                name="documentos"
+                accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"
+                multiple
+                class="sr-only"
+              />
+            </div>
+
+            <div id="file-upload-error" class="hidden mt-2 text-xs font-medium text-terracotta-dark"></div>
+            <ul id="file-upload-list" class="mt-3 space-y-2 empty:hidden"></ul>
+          </div>
+
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border">
+            <button
+              type="button"
+              data-prev-step="1"
+              class="btn-secondary w-full sm:w-auto"
+            >
+              ← Voltar ao Passo 1
+            </button>
+            <button
+              type="button"
+              data-next-step="3"
+              class="btn-primary w-full sm:w-auto"
+            >
+              <span>Continuar para o objetivo</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </fieldset>
+
+        <!-- ============================================================== -->
+        <!-- PASSO 3 — O OBJETIVO                                           -->
+        <!-- ============================================================== -->
+        <fieldset id="step-3" data-step-panel="3" class="hidden space-y-6">
+          <div>
+            <legend class="font-serif text-xl sm:text-2xl font-semibold text-pine">
+              Passo 3 — O objetivo
+            </legend>
+            <p class="mt-1 text-sm text-graphite-muted">
+              Indique o que pretende fazer com o terreno e qual o serviço que procura.
+            </p>
+          </div>
+
+          <!-- O que pretende (Escolha múltipla) -->
+          <div>
+            <span class="block text-sm font-medium text-pine mb-2">
+              O que pretende para o terreno? <span class="text-xs font-normal text-graphite-muted">(pode escolher vários)</span>
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+              {SITE_CONFIG.formOptions.objectives.map((obj) => (
+                <label class="flex items-center gap-2.5 rounded-md border border-border bg-white px-3.5 py-2.5 cursor-pointer hover:bg-stone/40 transition-colors">
+                  <input
+                    type="checkbox"
+                    name="objetivos"
+                    value={obj.id}
+                    class="h-4 w-4 rounded border-border text-pine focus:ring-pine"
+                  />
+                  <span class="text-sm text-graphite">{obj.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Serviço pretendido (Opção única) -->
+          <div>
+            <span class="block text-sm font-medium text-pine mb-2">
+              Serviço pretendido <span class="text-terracotta">*</span>
+            </span>
+            <div class="space-y-3">
+              {SITE_CONFIG.formOptions.serviceChoices.map((srv) => (
+                <label class="flex items-start gap-3 rounded-lg border border-border bg-white p-4 cursor-pointer hover:border-pine/60 hover:bg-stone/30 transition-all">
+                  <input
+                    type="radio"
+                    name="servico"
+                    value={srv.id}
+                    required
+                    class="mt-1 h-4 w-4 border-border text-pine focus:ring-pine"
+                  />
+                  <div>
+                    <span class="block font-serif text-base font-semibold text-pine">
+                      {srv.label}
+                    </span>
+                    <span class="mt-0.5 block text-xs sm:text-sm text-graphite-muted">
+                      {srv.sublabel}
+                    </span>
+                  </div>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Observações -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label for="observacoes" class="block text-sm font-medium text-pine">
+                Observações ou dúvidas específicas <span class="text-xs font-normal text-graphite-muted">(opcional)</span>
+              </label>
+              <span id="obs-char-count" class="text-xs text-graphite-muted">0 / 1000</span>
+            </div>
+            <textarea
+              id="observacoes"
+              name="observacoes"
+              rows="4"
+              maxlength="1000"
+              placeholder="Contexto adicional: se já falou com a Câmara, se tem urgência wegen CPCV, que tipo de projeto imagina..."
+              class="w-full rounded-md border border-border bg-white p-3.5 text-sm text-graphite placeholder:text-graphite-light"
+            ></textarea>
+          </div>
+
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border">
+            <button
+              type="button"
+              data-prev-step="2"
+              class="btn-secondary w-full sm:w-auto"
+            >
+              ← Voltar ao Passo 2
+            </button>
+            <button
+              type="button"
+              data-next-step="4"
+              class="btn-primary w-full sm:w-auto"
+            >
+              <span>Continuar para os contactos</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </fieldset>
+
+        <!-- ============================================================== -->
+        <!-- PASSO 4 — CONTACTOS                                            -->
+        <!-- ============================================================== -->
+        <fieldset id="step-4" data-step-panel="4" class="hidden space-y-6">
+          <div>
+            <legend class="font-serif text-xl sm:text-2xl font-semibold text-pine">
+              Passo 4 — Os seus contactos
+            </legend>
+            <p class="mt-1 text-sm text-graphite-muted">
+              Confirmamos em até 24 horas úteis se temos a informação necessária e enviamos a proposta.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="sm:col-span-2">
+              <label for="nome" class="block text-sm font-medium text-pine mb-1.5">
+                Nome completo <span class="text-terracotta">*</span>
+              </label>
+              <input
+                type="text"
+                id="nome"
+                name="nome"
+                required
+                autocomplete="name"
+                placeholder="O seu nome"
+                class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite"
+              />
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-pine mb-1.5">
+                E-mail <span class="text-terracotta">*</span>
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                autocomplete="email"
+                placeholder="nome@exemplo.pt"
+                class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite"
+              />
+            </div>
+
+            <div>
+              <label for="telemovel" class="block text-sm font-medium text-pine mb-1.5">
+                Telemóvel <span class="text-terracotta">*</span>
+              </label>
+              <input
+                type="tel"
+                id="telemovel"
+                name="telemovel"
+                required
+                autocomplete="tel"
+                placeholder="+351 910 000 000"
+                class="w-full rounded-md border border-border bg-white px-3.5 py-2.5 text-sm text-graphite"
+              />
+            </div>
+          </div>
+
+          <!-- Preferência de contacto -->
+          <div>
+            <span class="block text-sm font-medium text-pine mb-2">
+              Preferência de contacto
+            </span>
+            <div class="flex flex-wrap gap-3">
+              {SITE_CONFIG.formOptions.contactPreferences.map((pref, i) => (
+                <label class="inline-flex items-center gap-2 rounded-md border border-border bg-white px-3.5 py-2 cursor-pointer hover:bg-stone/40">
+                  <input
+                    type="radio"
+                    name="preferencia_contacto"
+                    value={pref.id}
+                    checked={i === 0}
+                    class="h-4 w-4 border-border text-pine focus:ring-pine"
+                  />
+                  <span class="text-sm text-graphite">{pref.label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <!-- Consentimentos RGPD -->
+          <div class="space-y-3 rounded-lg border border-border bg-stone/40 p-4">
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                id="aceita_privacidade"
+                name="aceita_privacidade"
+                required
+                class="mt-1 h-4 w-4 rounded border-border text-pine focus:ring-pine"
+              />
+              <span class="text-xs sm:text-sm text-graphite">
+                Li e aceito a <a href="/privacidade" target="_blank" class="font-medium text-pine underline">Política de Privacidade</a>. <span class="text-terracotta">*</span>
+              </span>
+            </label>
+
+            <label class="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                id="aceita_marketing"
+                name="aceita_marketing"
+                class="mt-1 h-4 w-4 rounded border-border text-pine focus:ring-pine"
+              />
+              <span class="text-xs sm:text-sm text-graphite-muted">
+                Aceito receber comunicações da PMVP (opcional).
+              </span>
+            </label>
+          </div>
+
+          <!-- Proteção Anti-Spam Cloudflare Turnstile / reCAPTCHA placeholder -->
+          <div class="flex items-center justify-between rounded border border-border/80 bg-stone/30 px-3 py-2 text-xs text-graphite-muted">
+            <span>Protegido contra spam (Honeypot + Cloudflare Turnstile / reCAPTCHA v3)</span>
+            <span class="font-mono text-[11px] text-pine">SSL · Armazenamento Privado</span>
+          </div>
+
+          <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 pt-4 border-t border-border">
+            <button
+              type="button"
+              data-prev-step="3"
+              class="btn-secondary w-full sm:w-auto"
+            >
+              ← Voltar ao Passo 3
+            </button>
+            <button
+              type="submit"
+              id="submit-terreno-btn"
+              class="btn-terracotta w-full sm:w-auto px-8 py-3.5 text-base font-semibold"
+            >
+              <span id="submit-btn-text">Enviar pedido</span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import L from 'leaflet';
+
+  const DRAFT_KEY = 'pmvp_terreno_draft_v1';
+  let currentStep = 1;
+  let formStarted = false;
+  let selectedFiles: File[] = [];
+  let mapInstance: L.Map | null = null;
+  let mapMarker: L.Marker | null = null;
+
+  const form = document.getElementById('terreno-form') as HTMLFormElement | null;
+  const errorBanner = document.getElementById('form-error-banner');
+  const errorMessage = document.getElementById('form-error-message');
+  const progressBar = document.getElementById('form-progress-bar');
+
+  function showError(msg: string) {
+    if (errorBanner && errorMessage) {
+      errorMessage.textContent = msg;
+      errorBanner.classList.remove('hidden');
+      errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  function clearError() {
+    if (errorBanner) errorBanner.classList.add('hidden');
+  }
+
+  function trackEvent(name: string, params: Record<string, unknown> = {}) {
+    const w = window as unknown as { pmvpTrack?: (n: string, p: Record<string, unknown>) => void };
+    if (typeof w.pmvpTrack === 'function') {
+      w.pmvpTrack(name, params);
+    }
+  }
+
+  function markFormStart() {
+    if (!formStarted) {
+      formStarted = true;
+      trackEvent('form_start', { page: '/submeter-terreno' });
+    }
+  }
+
+  function validateStep(step: number): boolean {
+    clearError();
+    if (!form) return true;
+
+    if (step === 1) {
+      const checkedProfile = form.querySelector<HTMLInputElement>('input[name="perfil"]:checked');
+      if (!checkedProfile) {
+        showError('Por favor, selecione o seu perfil para continuar.');
+        return false;
+      }
+    }
+
+    if (step === 2) {
+      const concelhoEl = document.getElementById('concelho') as HTMLSelectElement | null;
+      const concelhoOutroEl = document.getElementById('concelho_outro') as HTMLInputElement | null;
+      const coordEl = document.getElementById('coordenadas') as HTMLInputElement | null;
+      const moradaEl = document.getElementById('morada') as HTMLInputElement | null;
+
+      if (!concelhoEl || !concelhoEl.value) {
+        showError('Por favor, selecione o concelho onde se localiza o terreno.');
+        return false;
+      }
+      if (concelhoEl.value === 'Outro' && (!concelhoOutroEl || !concelhoOutroEl.value.trim())) {
+        showError('Por favor, indique o nome do concelho no campo "Qual o concelho?".');
+        return false;
+      }
+      const hasCoord = coordEl && coordEl.value.trim().length > 0;
+      const hasMorada = moradaEl && moradaEl.value.trim().length > 0;
+      if (!hasCoord && !hasMorada) {
+        showError(
+          'Por favor, indique a localização do terreno: largue um pin no mapa, introduza as coordenadas ou escreva a morada/descrição.'
+        );
+        return false;
+      }
+    }
+
+    if (step === 3) {
+      const checkedService = form.querySelector<HTMLInputElement>('input[name="servico"]:checked');
+      if (!checkedService) {
+        showError('Por favor, selecione o serviço pretendido (ou "Não sei, quero aconselhamento").');
+        return false;
+      }
+    }
+
+    if (step === 4) {
+      const nome = (document.getElementById('nome') as HTMLInputElement | null)?.value.trim() || '';
+      const email = (document.getElementById('email') as HTMLInputElement | null)?.value.trim() || '';
+      const telemovel = (document.getElementById('telemovel') as HTMLInputElement | null)?.value.trim() || '';
+      const priv = (document.getElementById('aceita_privacidade') as HTMLInputElement | null)?.checked || false;
+
+      if (!nome) {
+        showError('Por favor, indique o seu nome.');
+        return false;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showError('Por favor, introduza um endereço de e-mail válido.');
+        return false;
+      }
+      const cleanPhone = telemovel.replace(/[\s().-]/g, '');
+      const validPhone = /^(\+351|00351)?[239]\d{8}$/.test(cleanPhone) || /^\+[1-9]\d{6,14}$/.test(cleanPhone);
+      if (!validPhone) {
+        showError('Por favor, introduza um número de telemóvel português válido (9 dígitos) ou internacional (+...).');
+        return false;
+      }
+      if (!priv) {
+        showError('É necessário aceitar a Política de Privacidade para enviar o pedido.');
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function goToStep(targetStep: number, skipValidation = false) {
+    if (!skipValidation && targetStep > currentStep) {
+      for (let s = currentStep; s < targetStep; s++) {
+        if (!validateStep(s)) return;
+      }
+    } else {
+      clearError();
+    }
+
+    currentStep = targetStep;
+
+    document.querySelectorAll<HTMLElement>('[data-step-panel]').forEach((panel) => {
+      const panelNum = Number(panel.getAttribute('data-step-panel'));
+      if (panelNum === currentStep) {
+        panel.classList.remove('hidden');
+      } else {
+        panel.classList.add('hidden');
+      }
+    });
+
+    document.querySelectorAll<HTMLElement>('[data-step-indicator]').forEach((btn) => {
+      const stepNum = Number(btn.getAttribute('data-step-indicator'));
+      const badge = btn.querySelector<HTMLElement>(`[data-step-badge="${stepNum}"]`);
+      if (stepNum === currentStep) {
+        btn.classList.add('border-pine', 'bg-stone/40');
+        btn.classList.remove('border-border');
+        if (badge) {
+          badge.classList.add('bg-pine', 'text-white');
+          badge.classList.remove('bg-stone', 'text-graphite', 'bg-terracotta');
+        }
+      } else if (stepNum < currentStep) {
+        btn.classList.add('border-pine/40');
+        if (badge) {
+          badge.classList.add('bg-terracotta', 'text-white');
+          badge.classList.remove('bg-stone', 'text-graphite', 'bg-pine');
+        }
+      } else {
+        btn.classList.remove('border-pine', 'bg-stone/40', 'border-pine/40');
+        btn.classList.add('border-border');
+        if (badge) {
+          badge.classList.add('bg-stone', 'text-graphite');
+          badge.classList.remove('bg-pine', 'bg-terracotta', 'text-white');
+        }
+      }
+    });
+
+    if (progressBar) {
+      progressBar.style.width = `${(currentStep / 4) * 100}%`;
+    }
+
+    if (currentStep === 2) {
+      setTimeout(() => {
+        initMapIfNeeded();
+        mapInstance?.invalidateSize();
+      }, 60);
+    }
+
+    trackEvent('form_step', { step: currentStep });
+    saveDraft();
+  }
+
+  function initMapIfNeeded() {
+    if (mapInstance) return;
+    const mapContainer = document.getElementById('terreno-map');
+    if (!mapContainer) return;
+
+    // Coordenadas iniciais centradas na Grande Lisboa
+    mapInstance = L.map(mapContainer).setView([38.765, -9.185], 10);
+
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap contributors',
+    });
+
+    // Camada de Ortofoto: base aérea de alta resolução + WMS oficial da Direção-Geral do Território (DGT)
+    const imageryFallback = L.tileLayer(
+      'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      {
+        maxZoom: 19,
+        attribution: 'Ortofotos DGT / Esri',
+      }
+    );
+
+    const dgtWms = L.tileLayer.wms('https://cartografia.dgterritorio.gov.pt/ortos2021/service?', {
+      layers: 'Ortos2021-RGB',
+      format: 'image/png',
+      transparent: true,
+      maxZoom: 19,
+      attribution: '&copy; Direção-Geral do Território (DGT)',
+    });
+
+    const ortofotoGroup = L.layerGroup([imageryFallback, dgtWms]);
+
+    osmLayer.addTo(mapInstance);
+
+    const btnOsm = document.getElementById('map-layer-osm');
+    const btnOrto = document.getElementById('map-layer-ortofoto');
+
+    btnOsm?.addEventListener('click', () => {
+      if (!mapInstance) return;
+      mapInstance.removeLayer(ortofotoGroup);
+      osmLayer.addTo(mapInstance);
+      btnOsm.classList.add('bg-pine', 'text-white');
+      btnOsm.classList.remove('text-graphite');
+      btnOrto?.classList.remove('bg-pine', 'text-white');
+      btnOrto?.classList.add('text-graphite');
+    });
+
+    btnOrto?.addEventListener('click', () => {
+      if (!mapInstance) return;
+      mapInstance.removeLayer(osmLayer);
+      ortofotoGroup.addTo(mapInstance);
+      btnOrto.classList.add('bg-pine', 'text-white');
+      btnOrto.classList.remove('text-graphite');
+      btnOsm?.classList.remove('bg-pine', 'text-white');
+      btnOsm?.classList.add('text-graphite');
+    });
+
+    const pinIcon = L.divIcon({
+      className: 'pmvp-custom-pin',
+      html: `<div style="width:28px;height:28px;border-radius:50% 50% 50% 0;background:#B5653A;border:3px solid #FFFFFF;transform:rotate(-45deg);box-shadow:0 3px 8px rgba(0,0,0,0.35);"></div>`,
+      iconSize: [28, 28],
+      iconAnchor: [14, 28],
+    });
+
+    function setPin(lat: number, lng: number, pan = false) {
+      if (!mapInstance) return;
+      const formatted = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      const coordInput = document.getElementById('coordenadas') as HTMLInputElement | null;
+      const statusEl = document.getElementById('map-pin-status');
+      const clearBtn = document.getElementById('clear-map-pin');
+      const gmapsLink = document.getElementById('google-maps-preview') as HTMLAnchorElement | null;
+
+      if (!mapMarker) {
+        mapMarker = L.marker([lat, lng], { draggable: true, icon: pinIcon }).addTo(mapInstance);
+        mapMarker.on('dragend', () => {
+          const pos = mapMarker?.getLatLng();
+          if (pos) setPin(pos.lat, pos.lng, false);
+        });
+      } else {
+        mapMarker.setLatLng([lat, lng]);
+      }
+
+      if (pan) {
+        mapInstance.panTo([lat, lng]);
+      }
+
+      if (coordInput) coordInput.value = formatted;
+      if (statusEl) statusEl.textContent = `Pin marcado em: ${formatted} (pode arrastar o pin para ajustar)`;
+      if (clearBtn) clearBtn.classList.remove('hidden');
+      if (gmapsLink) {
+        gmapsLink.href = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+        gmapsLink.classList.remove('hidden');
+      }
+      saveDraft();
+    }
+
+    mapInstance.on('click', (e: L.LeafletMouseEvent) => {
+      markFormStart();
+      setPin(e.latlng.lat, e.latlng.lng, false);
+    });
+
+    document.getElementById('clear-map-pin')?.addEventListener('click', () => {
+      if (mapInstance && mapMarker) {
+        mapInstance.removeLayer(mapMarker);
+        mapMarker = null;
+      }
+      const coordInput = document.getElementById('coordenadas') as HTMLInputElement | null;
+      const statusEl = document.getElementById('map-pin-status');
+      const clearBtn = document.getElementById('clear-map-pin');
+      const gmapsLink = document.getElementById('google-maps-preview');
+      if (coordInput) coordInput.value = '';
+      if (statusEl) statusEl.textContent = 'Clique no mapa sobre o terreno para marcar as coordenadas exatas.';
+      clearBtn?.classList.add('hidden');
+      gmapsLink?.classList.add('hidden');
+      saveDraft();
+    });
+
+    // Sincronizar se já houver coordenadas no input (ex.: vindo do rascunho)
+    const coordInput = document.getElementById('coordenadas') as HTMLInputElement | null;
+    if (coordInput && coordInput.value.trim()) {
+      const parts = coordInput.value.split(',').map((s) => parseFloat(s.trim()));
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        setPin(parts[0], parts[1], true);
+      }
+    }
+
+    coordInput?.addEventListener('change', () => {
+      const parts = coordInput.value.split(',').map((s) => parseFloat(s.trim()));
+      if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+        setPin(parts[0], parts[1], true);
+      }
+    });
+  }
+
+  // Gestão de Rascunho em sessionStorage
+  function saveDraft() {
+    if (!form) return;
+    try {
+      const data = new FormData(form);
+      const draft: Record<string, unknown> = {
+        step: currentStep,
+        perfil: data.get('perfil') || '',
+        concelho: data.get('concelho') || '',
+        concelho_outro: data.get('concelho_outro') || '',
+        freguesia: data.get('freguesia') || '',
+        coordenadas: data.get('coordenadas') || '',
+        morada: data.get('morada') || '',
+        artigo_matricial: data.get('artigo_matricial') || '',
+        area_valor: data.get('area_valor') || '',
+        area_unidade: data.get('area_unidade') || 'm²',
+        objetivos: data.getAll('objetivos'),
+        servico: data.get('servico') || '',
+        observacoes: data.get('observacoes') || '',
+        nome: data.get('nome') || '',
+        email: data.get('email') || '',
+        telemovel: data.get('telemovel') || '',
+        preferencia_contacto: data.get('preferencia_contacto') || 'email',
+      };
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    } catch {}
+  }
+
+  function restoreDraftAndParams() {
+    if (!form) return;
+    try {
+      const raw = sessionStorage.getItem(DRAFT_KEY);
+      if (raw) {
+        const draft = JSON.parse(raw);
+        if (draft.perfil) {
+          const el = form.querySelector<HTMLInputElement>(`input[name="perfil"][value="${draft.perfil}"]`);
+          if (el) el.checked = true;
+        }
+        const textFields = [
+          'concelho',
+          'concelho_outro',
+          'freguesia',
+          'coordenadas',
+          'morada',
+          'artigo_matricial',
+          'area_valor',
+          'area_unidade',
+          'observacoes',
+          'nome',
+          'email',
+          'telemovel',
+        ];
+        textFields.forEach((field) => {
+          if (draft[field]) {
+            const input = document.getElementById(field) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null;
+            if (input) input.value = String(draft[field]);
+          }
+        });
+        if (Array.isArray(draft.objetivos)) {
+          draft.objetivos.forEach((val: string) => {
+            const cb = form.querySelector<HTMLInputElement>(`input[name="objetivos"][value="${val}"]`);
+            if (cb) cb.checked = true;
+          });
+        }
+        if (draft.servico) {
+          const srv = form.querySelector<HTMLInputElement>(`input[name="servico"][value="${draft.servico}"]`);
+          if (srv) srv.checked = true;
+        }
+        if (draft.preferencia_contacto) {
+          const pref = form.querySelector<HTMLInputElement>(
+            `input[name="preferencia_contacto"][value="${draft.preferencia_contacto}"]`
+          );
+          if (pref) pref.checked = true;
+        }
+      }
+    } catch {}
+
+    // Parâmetros URL (?perfil= e ?produto=) têm prioridade sobre o rascunho
+    const params = new URLSearchParams(window.location.search);
+    const perfilParam = (params.get('perfil') || '').toLowerCase().trim();
+    const produtoParam = (params.get('produto') || '').toLowerCase().trim();
+
+    const profileMap: Record<string, string> = {
+      proprietario: 'proprietario',
+      vender: 'proprietario',
+      comprar: 'comprar',
+      heranca: 'heranca',
+      herdeiro: 'heranca',
+      profissional: 'profissional',
+      parceiro: 'profissional',
+    };
+
+    if (perfilParam && profileMap[perfilParam]) {
+      const targetVal = profileMap[perfilParam];
+      const radio = form.querySelector<HTMLInputElement>(`input[name="perfil"][value="${targetVal}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    const productMap: Record<string, string> = {
+      'raio-x': 'raio-x',
+      raiox: 'raio-x',
+      estudo: 'estudo',
+      'estudo-de-viabilidade': 'estudo',
+      valor: 'estudo',
+      pip: 'aconselhamento',
+      aconselhamento: 'aconselhamento',
+    };
+
+    if (produtoParam && productMap[produtoParam]) {
+      const targetProd = productMap[produtoParam];
+      const radio = form.querySelector<HTMLInputElement>(`input[name="servico"][value="${targetProd}"]`);
+      if (radio) radio.checked = true;
+    }
+
+    // Atualizar visibilidade de concelho_outro e contador de observações
+    toggleConcelhoOutro();
+    updateCharCount();
+  }
+
+  function toggleConcelhoOutro() {
+    const sel = document.getElementById('concelho') as HTMLSelectElement | null;
+    const wrapper = document.getElementById('concelho-outro-wrapper');
+    if (sel && wrapper) {
+      if (sel.value === 'Outro') {
+        wrapper.classList.remove('hidden');
+      } else {
+        wrapper.classList.add('hidden');
+      }
+    }
+  }
+
+  function updateCharCount() {
+    const obs = document.getElementById('observacoes') as HTMLTextAreaElement | null;
+    const counter = document.getElementById('obs-char-count');
+    if (obs && counter) {
+      counter.textContent = `${obs.value.length} / 1000`;
+    }
+  }
+
+  // Gestão de Ficheiros (Upload até 3 ficheiros, máx 10 MB cada, PDF/JPG/PNG)
+  function setupFileUpload() {
+    const fileInput = document.getElementById('documentos-input') as HTMLInputElement | null;
+    const listEl = document.getElementById('file-upload-list');
+    const errEl = document.getElementById('file-upload-error');
+
+    if (!fileInput || !listEl || !errEl) return;
+
+    function renderFileList() {
+      if (!listEl) return;
+      listEl.innerHTML = '';
+      selectedFiles.forEach((file, idx) => {
+        const li = document.createElement('li');
+        li.className =
+          'flex items-center justify-between gap-2 rounded border border-border bg-white px-3 py-2 text-xs text-graphite';
+        const sizeKb = (file.size / 1024).toFixed(0);
+        li.innerHTML = `
+          <span class="truncate font-medium text-pine">${file.name} <span class="text-graphite-muted font-normal">(${sizeKb} KB)</span></span>
+          <button type="button" data-remove-file="${idx}" class="text-terracotta hover:underline font-medium shrink-0">Remover</button>
+        `;
+        listEl.appendChild(li);
+      });
+
+      listEl.querySelectorAll<HTMLButtonElement>('[data-remove-file]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const removeIdx = Number(btn.getAttribute('data-remove-file'));
+          selectedFiles.splice(removeIdx, 1);
+          syncFilesToInput();
+          renderFileList();
+        });
+      });
+    }
+
+    function syncFilesToInput() {
+      if (!fileInput) return;
+      const dt = new DataTransfer();
+      selectedFiles.forEach((f) => dt.items.add(f));
+      fileInput.files = dt.files;
+    }
+
+    fileInput.addEventListener('change', () => {
+      errEl.classList.add('hidden');
+      const incoming = Array.from(fileInput.files || []);
+      for (const file of incoming) {
+        if (selectedFiles.length >= 3) {
+          errEl.textContent = 'Pode anexar no máximo 3 ficheiros por pedido.';
+          errEl.classList.remove('hidden');
+          break;
+        }
+        const ext = file.name.split('.').pop()?.toLowerCase() || '';
+        if (!['pdf', 'jpg', 'jpeg', 'png'].includes(ext)) {
+          errEl.textContent = `O ficheiro "${file.name}" não é válido. Escolha apenas PDF, JPG ou PNG.`;
+          errEl.classList.remove('hidden');
+          continue;
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          errEl.textContent = `O ficheiro "${file.name}" excede o limite de 10 MB.`;
+          errEl.classList.remove('hidden');
+          continue;
+        }
+        selectedFiles.push(file);
+        trackEvent('file_upload', { file_name: file.name, file_size: file.size });
+      }
+      syncFilesToInput();
+      renderFileList();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    restoreDraftAndParams();
+    setupFileUpload();
+    goToStep(1, true);
+
+    document.querySelectorAll<HTMLButtonElement>('[data-next-step]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        markFormStart();
+        const next = Number(btn.getAttribute('data-next-step'));
+        goToStep(next);
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-prev-step]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const prev = Number(btn.getAttribute('data-prev-step'));
+        goToStep(prev, true);
+      });
+    });
+
+    document.querySelectorAll<HTMLButtonElement>('[data-step-indicator]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const target = Number(btn.getAttribute('data-step-indicator'));
+        goToStep(target);
+      });
+    });
+
+    document.getElementById('concelho')?.addEventListener('change', () => {
+      toggleConcelhoOutro();
+      saveDraft();
+    });
+
+    document.getElementById('observacoes')?.addEventListener('input', () => {
+      updateCharCount();
+      saveDraft();
+    });
+
+    form?.addEventListener('change', () => {
+      markFormStart();
+      saveDraft();
+    });
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!validateStep(1) || !validateStep(2) || !validateStep(3) || !validateStep(4)) {
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-terreno-btn') as HTMLButtonElement | null;
+      const submitText = document.getElementById('submit-btn-text');
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitText) submitText.textContent = 'A enviar pedido...';
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch('/api/submeter-terreno', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+          },
+          body: formData,
+        });
+
+        const result = await response.json();
+        if (!response.ok || !result.ok) {
+          showError(result.error || 'Não foi possível enviar o pedido. Verifique os dados.');
+          if (submitBtn) submitBtn.disabled = false;
+          if (submitText) submitText.textContent = 'Enviar pedido';
+          return;
+        }
+
+        // Limpa rascunho após sucesso
+        try {
+          sessionStorage.removeItem(DRAFT_KEY);
+        } catch {}
+
+        // Dispara evento de submissão
+        trackEvent('form_submit', {
+          produto: String(formData.get('servico') || ''),
+          perfil: String(formData.get('perfil') || ''),
+          concelho: String(formData.get('concelho') || ''),
+          order_id: result.id,
+        });
+
+        window.location.href = result.redirectUrl || `/obrigado?id=${encodeURIComponent(result.id)}`;
+      } catch (err) {
+        showError('Erro de ligação ao enviar o pedido. Por favor, tente novamente.');
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitText) submitText.textContent = 'Enviar pedido';
+      }
+    });
+  });
+</script>

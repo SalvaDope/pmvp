@@ -1,0 +1,57 @@
+---
+import SegmentPageLayout from '../../components/SegmentPageLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+const { estudo } = SITE_CONFIG.products;
+---
+
+<SegmentPageLayout
+  metaTitle="Quer Vender um Terreno? Mostre o Seu Verdadeiro Potencial | PMVP"
+  metaDescription="Valorize o seu terreno antes de o colocar à venda. O Estudo de Viabilidade da PMVP dá aos compradores segurança técnica sobre o PDM, condicionantes e usos permitidos."
+  badge="Para proprietários que querem vender"
+  h1="Mostre o verdadeiro potencial do seu terreno."
+  lead="Quem compra um terreno compra o que lá pode fazer. Quando o vendedor apresenta um dossiê técnico independente sobre o PDM e as condicionantes, reduz a incerteza do comprador e defende o preço."
+  imageMarker="[IMG: Dossiê cartográfico de potencial construtivo para apresentação a compradores]"
+  perfilId="vender"
+  pains={[
+    {
+      title: 'Compradores que desvalorizam por falta de informação',
+      description:
+        'Perante dúvidas sobre o PDM, RAN, REN ou áreas, os interessados assumem o pior cenário e fazem propostas muito abaixo do potencial real.',
+    },
+    {
+      title: 'Negociação sem argumentos técnicos',
+      description:
+        'Sem dados concretos sobre índices de construção, usos admitidos e estado documental, é difícil justificar o valor pedido.',
+    },
+    {
+      title: 'Terreno parado no mercado',
+      description:
+        'Muitas visitas acabam sem proposta porque o comprador não sabe quanto tempo ou risco terá na Câmara Municipal.',
+    },
+  ]}
+  howWeHelp={[
+    {
+      title: 'Dossiê técnico pronto a apresentar aos compradores',
+      description:
+        'O nosso Estudo de Viabilidade inclui cartografia clara, enquadramento no PDM, análise de condicionantes e verificação documental.',
+    },
+    {
+      title: 'Identificação do melhor uso para o mercado',
+      description:
+        'Por vezes um terreno tem limitações para habitação mas excelente enquadramento para logística, equipamento ou turismo.',
+    },
+    {
+      title: 'Estratégia de valorização pré-venda (PIP)',
+      description:
+        'Se fizer sentido valorizar o terreno antes de vender, acompanhamos o Pedido de Informação Prévia (PIP) com arquitetos parceiros.',
+    },
+  ]}
+  recommendedTitle="Estudo de Viabilidade (pode ser apresentado aos compradores)"
+  recommendedDescription="Uma análise técnica completa e independente que esclarece o que pode ser construído, identifica eventuais condicionantes e dá confiança imediata a compradores e investidores."
+  recommendedPrice={`${estudo.priceDisplay} ${estudo.vatLabel} ${estudo.placeholderTag} · Prazo: ${estudo.turnaround}`}
+  primaryCtaLabel="Analisar terreno para venda"
+  primaryCtaHref="/submeter-terreno?perfil=proprietario&produto=estudo"
+  secondaryCtaLabel="Começar pelo Raio-X (190 €)"
+  secondaryCtaHref="/submeter-terreno?perfil=proprietario&produto=raio-x"
+/>

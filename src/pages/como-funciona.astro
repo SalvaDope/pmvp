@@ -1,0 +1,160 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FaqSection from '../components/FaqSection.astro';
+import { SITE_CONFIG } from '../config/site';
+
+const detailedSteps = [
+  {
+    num: '01',
+    title: 'Submete o terreno',
+    summary: 'Localização, artigo matricial ou caderneta, e o seu objetivo.',
+    details:
+      'Através do nosso formulário online em 4 passos, indica a localização do terreno (largando um pin sobre a ortofoto, escrevendo a morada ou as coordenadas), o concelho, o seu objetivo e o serviço pretendido. Se já tiver a caderneta predial ou certidão do registo predial, pode anexá-las de imediato.',
+  },
+  {
+    num: '02',
+    title: 'Confirmamos em 24 h úteis',
+    summary: 'Verificamos se temos a informação necessária e enviamos a proposta.',
+    details:
+      'A nossa equipa técnica valida se os elementos enviados permitem identificar o terreno sem ambiguidade. Em até 24 horas úteis, enviamos a confirmação do pedido, a proposta fechada (no caso de Estudo de Viabilidade) e os dados para pagamento.',
+  },
+  {
+    num: '03',
+    title: 'Analisamos',
+    summary: 'PDM, condicionantes, cadastro e, se pedir, o mercado.',
+    details:
+      'Cruzamos as plantas de ordenamento e de condicionantes do PDM em vigor, o regulamento municipal, os dados da Direção-Geral do Território, BUPi, RAN, REN, domínio hídrico, servidões administrativas e topografia. Se contratar a Estimativa de Valor, analisamos também os comparáveis de mercado para cada cenário.',
+  },
+  {
+    num: '04',
+    title: 'Recebe o relatório',
+    summary: 'Com cartografia, conclusões claras e recomendação do passo seguinte.',
+    details:
+      'Recebe o relatório técnico em formato PDF com mapas de sobreposição, conclusões diretas em linguagem sem jargão e a nossa recomendação fundamentada. No Estudo de Viabilidade, realizamos uma reunião de entrega (presencial ou por vídeo) para esclarecer todas as questões.',
+  },
+];
+---
+
+<BaseLayout
+  title="Como Funciona a Análise de Terrenos | PMVP — Grande Lisboa"
+  description="Conheça passo a passo como funciona a análise de terrenos da PMVP, que documentos deve ter, de onde vem a informação oficial e quais os prazos."
+>
+  <section class="py-12 sm:py-16 lg:py-20 bg-stone/70 border-b border-border">
+    <div class="container-pmvp max-w-4xl">
+      <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+        Processo Passo a Passo
+      </span>
+      <h1 class="mt-2 font-serif text-3xl sm:text-5xl font-semibold text-pine">
+        Como funciona
+      </h1>
+      <p class="mt-4 text-base sm:text-lg text-graphite leading-relaxed">
+        Um método transparente, baseado em fontes oficiais e desenhado para lhe dar respostas fundamentadas sobre o seu terreno.
+      </p>
+    </div>
+  </section>
+
+  <!-- 4 Passos Detalhados -->
+  <section class="py-16 lg:py-24 bg-white border-b border-border">
+    <div class="container-pmvp max-w-4xl space-y-8">
+      {detailedSteps.map((step) => (
+        <div class="rounded-xl border border-border bg-stone/30 p-6 sm:p-8 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 mb-3">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-md bg-pine text-white font-mono text-sm font-bold shrink-0">
+              {step.num}
+            </span>
+            <div>
+              <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine">
+                {step.title}
+              </h2>
+              <p class="text-xs sm:text-sm font-medium text-terracotta-dark">
+                {step.summary}
+              </p>
+            </div>
+          </div>
+          <p class="mt-3 text-sm sm:text-base text-graphite leading-relaxed">
+            {step.details}
+          </p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Documentos, Fontes de Informação e Prazos/Pagamento -->
+  <section class="py-16 lg:py-24 bg-stone">
+    <div class="container-pmvp">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Que documentos devo ter? -->
+        <div class="card-pmvp flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+              Documentação
+            </span>
+            <h2 class="mt-2 font-serif text-xl sm:text-2xl font-semibold text-pine">
+              Que documentos devo ter?
+            </h2>
+            <ul class="mt-4 space-y-2.5 text-sm text-graphite">
+              <li>• <strong>Caderneta predial</strong> (atualizada no Portal das Finanças)</li>
+              <li>• <strong>Certidão do registo predial</strong> (ou código de acesso da certidão permanente)</li>
+              <li>• <strong>Localização no mapa</strong> (pin, coordenadas ou representação BUPi/cadastral)</li>
+            </ul>
+          </div>
+          <p class="mt-6 pt-4 border-t border-border text-sm font-medium text-pine italic">
+            "Se não tiver, ajudamos a obter."
+          </p>
+        </div>
+
+        <!-- De onde vem a informação? -->
+        <div class="card-pmvp flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+              Rigor Técnico
+            </span>
+            <h2 class="mt-2 font-serif text-xl sm:text-2xl font-semibold text-pine">
+              De onde vem a informação?
+            </h2>
+            <p class="mt-4 text-sm text-graphite leading-relaxed">
+              Trabalhamos exclusivamente com <strong>fontes oficiais</strong>:
+            </p>
+            <ul class="mt-3 space-y-2 text-sm text-graphite">
+              <li>• PDM e cartas municipais (ordenamento e condicionantes)</li>
+              <li>• Direção-Geral do Território (cadastro, ortofotos e cartas de uso do solo)</li>
+              <li>• BUPi (Balcão Único do Prédio)</li>
+              <li>• Entidades da RAN, da REN, APA e património cultural, entre outras</li>
+            </ul>
+          </div>
+          <p class="mt-6 pt-4 border-t border-border text-xs text-graphite-muted">
+            Todos os mapas e fontes consultadas são identificados no relatório.
+          </p>
+        </div>
+
+        <!-- Prazos e pagamento -->
+        <div class="card-pmvp flex flex-col justify-between">
+          <div>
+            <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+              Condições
+            </span>
+            <h2 class="mt-2 font-serif text-xl sm:text-2xl font-semibold text-pine">
+              Prazos e pagamento
+            </h2>
+            <ul class="mt-4 space-y-3 text-sm text-graphite leading-relaxed">
+              <li>• <strong>Validação prévia:</strong> confirmamos sempre primeiro se dispomos dos elementos necessários antes de emitir dados de pagamento.</li>
+              <li>• <strong>Pagamento:</strong> pagamento antes do início dos trabalhos.</li>
+              <li>• <strong>Contagem de prazos:</strong> os prazos ({SITE_CONFIG.products.raioX.turnaround} no Raio-X; {SITE_CONFIG.products.estudo.turnaround} no Estudo) contam após a confirmação e pagamento.</li>
+            </ul>
+          </div>
+          <div class="mt-6 pt-4 border-t border-border">
+            <a
+              href="/submeter-terreno"
+              data-track-cta="como_funciona_cta"
+              class="btn-primary w-full text-sm"
+            >
+              Submeter o meu terreno
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FaqSection />
+</BaseLayout>

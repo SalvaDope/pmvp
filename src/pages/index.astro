@@ -1,0 +1,489 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CartographicVisual from '../components/CartographicVisual.astro';
+import FaqSection from '../components/FaqSection.astro';
+import { SITE_CONFIG } from '../config/site';
+
+const { raioX } = SITE_CONFIG.products;
+
+const questionsAnswered = [
+  {
+    title: 'É possível construir?',
+    description: 'Verificamos se o PDM admite edificação residencial ou turística e que restrições condicionam a parcela.',
+    icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+  },
+  {
+    title: 'Há potencial industrial ou logístico?',
+    description: 'Avaliamos a inserção em espaços de atividades económicas, acessibilidades e parâmetros de ocupação.',
+    icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4',
+  },
+  {
+    title: 'Que outros usos são permitidos?',
+    description: 'Identificamos usos compatíveis previstos no regulamento municipal: equipamentos, turismo rural, comércio ou serviços.',
+    icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
+  },
+  {
+    title: 'Se não der para construir, qual o melhor uso agrícola?',
+    description: 'Analisamos aptidão do solo, disponibilidade hídrica, orografia e enquadramento agroflorestal.',
+    icon: 'M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z',
+  },
+  {
+    title: 'Qual a melhor estratégia para valorizar o terreno?',
+    description: 'Recomendamos o passo concreto mais adequado: avançar para PIP, regularizar áreas, vender ou manter.',
+    icon: 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6',
+  },
+];
+
+const whatWeAnalyze = [
+  {
+    title: 'Classificação e qualificação do solo (PDM)',
+    desc: 'Solo urbano ou rústico, categorias operativas e subcategorias de espaço.',
+  },
+  {
+    title: 'Reserva Agrícola Nacional (RAN)',
+    desc: 'Sobreposição com manchas de aptidão agrícola e regime de exceções.',
+  },
+  {
+    title: 'Reserva Ecológica Nacional (REN)',
+    desc: 'Tipologias biofísicas afetadas, riscos naturais e regime de compatibilidade.',
+  },
+  {
+    title: 'Linhas elétricas e servidões',
+    desc: 'Redes de alta/média tensão, gasodutos, estradas nacionais e faixas non aedificandi.',
+  },
+  {
+    title: 'Linhas de água e domínio hídrico',
+    desc: 'Leitos e margens de cursos de água, zonas inundáveis e faixas de servidão.',
+  },
+  {
+    title: 'Património cultural e marcos geodésicos',
+    desc: 'Zonas de proteção a imóveis classificados, arqueologia e vértices geodésicos.',
+  },
+  {
+    title: 'Sobreiros, azinheiras e montado',
+    desc: 'Povoamentos protegidos por legislação florestal específica e condicionantes de corte.',
+  },
+  {
+    title: 'Orografia, declives e exposição solar',
+    desc: 'Topografia do terreno, cotas altimétricas, orientação e condições de acesso.',
+  },
+];
+
+const segments = [
+  {
+    title: 'Vai comprar um terreno',
+    quote: 'Saiba o que pode construir antes de assinar o CPCV.',
+    href: '/para-quem/comprar',
+    cta: 'Ver guia para compradores',
+  },
+  {
+    title: 'Herdou um terreno',
+    quote: 'Perceba o que vale e o que permite antes de partilhar ou vender.',
+    href: '/para-quem/heranca',
+    cta: 'Ver guia para herdeiros',
+  },
+  {
+    title: 'Quer vender',
+    quote: 'Mostre aos compradores o potencial do seu terreno, com fundamento.',
+    href: '/para-quem/vender',
+    cta: 'Ver guia para proprietários',
+  },
+  {
+    title: 'É profissional',
+    quote: 'Mediadores, advogados e solicitadores: análises para os seus clientes.',
+    href: '/parceiros',
+    cta: 'Conhecer condições de parceiro',
+  },
+];
+
+const steps = [
+  {
+    num: '01',
+    title: 'Submete o terreno',
+    desc: 'Localização, artigo matricial ou caderneta, e o seu objetivo.',
+  },
+  {
+    num: '02',
+    title: 'Confirmamos em 24 h úteis',
+    desc: 'Verificamos se temos a informação necessária e enviamos a proposta.',
+  },
+  {
+    num: '03',
+    title: 'Analisamos',
+    desc: 'PDM, condicionantes, cadastro e, se pedir, o mercado.',
+  },
+  {
+    num: '04',
+    title: 'Recebe o relatório',
+    desc: 'Com cartografia, conclusões claras e recomendação do passo seguinte.',
+  },
+];
+---
+
+<BaseLayout
+  title="PMVP | Viabilidade de terrenos e urbanismo na Grande Lisboa"
+  description="Tem um terreno na Grande Lisboa? Analisamos o PDM, condicionantes (RAN, REN, servidões) e o mercado para lhe dizer se pode construir, para que usos e quanto vale."
+>
+  <!-- ==================================================================== -->
+  <!-- 1. HERO                                                              -->
+  <!-- ==================================================================== -->
+  <section class="relative overflow-hidden bg-stone/70 border-b border-border py-12 sm:py-16 lg:py-24">
+    <div class="container-pmvp">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 rounded-full border border-pine/20 bg-white px-3.5 py-1.5 text-xs font-medium text-pine shadow-sm">
+            <span class="h-2 w-2 rounded-full bg-terracotta"></span>
+            <span>{SITE_CONFIG.brand.name} · {SITE_CONFIG.brand.descriptorAlt}</span>
+          </div>
+
+          <h1 class="font-serif text-3xl sm:text-5xl lg:text-[52px] font-semibold text-pine leading-[1.12]">
+            Tem um terreno? Saiba o que pode fazer com ele.
+          </h1>
+
+          <p class="text-base sm:text-lg lg:text-xl text-graphite leading-relaxed max-w-2xl">
+            Analisamos o PDM, as condicionantes e o mercado para lhe dizer, com fundamento, se pode construir, para que usos e quanto pode valer o seu terreno.
+          </p>
+
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            <a
+              href="/submeter-terreno"
+              data-track-cta="hero_primary"
+              data-track-product="geral"
+              class="btn-primary text-base px-6 py-3.5"
+            >
+              <span>Analisar o meu terreno</span>
+              <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+            <a
+              href="/como-funciona"
+              data-track-cta="hero_secondary"
+              class="btn-secondary text-base px-6 py-3.5"
+            >
+              Ver como funciona
+            </a>
+          </div>
+
+          <p class="pt-2 text-xs sm:text-sm italic text-graphite-muted border-t border-border/80">
+            Grande Lisboa · Análise independente · Relatório técnico com cartografia
+          </p>
+        </div>
+
+        <div class="lg:col-span-5">
+          <CartographicVisual
+            marker="[IMG: vista aérea de terreno rústico com linhas de parcela sobrepostas]"
+            caption="Sobreposição técnica de limites cadastrais, curvas de nível e condicionantes sobre ortofoto oficial."
+            variant="hero"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 2. AS PERGUNTAS A QUE RESPONDEMOS (5 cartões com ícone)              -->
+  <!-- ==================================================================== -->
+  <section class="py-16 lg:py-24 bg-white" aria-labelledby="perguntas-heading">
+    <div class="container-pmvp">
+      <div class="max-w-2xl mb-12">
+        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+          Clareza para decidir
+        </span>
+        <h2 id="perguntas-heading" class="mt-2 font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-pine">
+          As perguntas a que respondemos
+        </h2>
+        <p class="mt-3 text-base text-graphite-muted">
+          Cada terreno tem um enquadramento único. Cruzamos legislação, cartografia e mercado para responder de forma objetiva às 5 questões decisivas.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+        {questionsAnswered.map((item, idx) => (
+          <div class="card-pmvp flex flex-col justify-between hover:border-pine/50">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex h-10 w-10 items-center justify-center rounded-md bg-stone text-pine">
+                  <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d={item.icon} />
+                  </svg>
+                </div>
+                <span class="font-mono text-xs font-semibold text-graphite-light">0{idx + 1}</span>
+              </div>
+              <h3 class="font-serif text-lg font-semibold text-pine leading-snug">
+                {item.title}
+              </h3>
+              <p class="mt-2.5 text-sm text-graphite-muted leading-relaxed">
+                {item.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 3. COMECE PELO RAIO-X (Destaque do Produto de Entrada)               -->
+  <!-- ==================================================================== -->
+  <section class="py-16 lg:py-20 bg-pine text-white border-y border-border" aria-labelledby="raiox-spotlight-heading">
+    <div class="container-pmvp">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div class="lg:col-span-8 space-y-4">
+          <span class="inline-block rounded bg-terracotta px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
+            Comece pelo Raio-X
+          </span>
+          <h2 id="raiox-spotlight-heading" class="font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-white">
+            Raio-X do Terreno — a primeira leitura, em {raioX.turnaround}
+          </h2>
+          <p class="text-base sm:text-lg text-stone/90 leading-relaxed max-w-3xl">
+            Uma análise objetiva da classificação do solo no PDM e das principais condicionantes (RAN, REN, linhas elétricas, servidões, linhas de água), com um semáforo de viabilidade e a nossa recomendação sobre o passo seguinte.
+          </p>
+          <div class="flex flex-wrap items-center gap-4 pt-2 text-sm text-stone/80">
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="h-4 w-4 text-terracotta-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Relatório PDF de 4–5 páginas com mapa
+            </span>
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="h-4 w-4 text-terracotta-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              Semáforo de viabilidade (habitação · indústria · agrícola)
+            </span>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4">
+          <div class="rounded-xl bg-white text-graphite p-6 sm:p-8 shadow-lg border border-border">
+            <div class="text-xs font-semibold uppercase tracking-wider text-graphite-muted">
+              Investimento inicial
+            </div>
+            <div class="mt-2 flex items-baseline gap-2">
+              <span class="font-serif text-4xl font-semibold text-pine">{raioX.priceDisplay}</span>
+              <span class="text-xs text-graphite-muted">{raioX.vatLabel}</span>
+              {raioX.placeholderTag && (
+                <span class="placeholder-tag">{raioX.placeholderTag}</span>
+              )}
+            </div>
+            <p class="mt-2 text-sm italic text-pine font-medium">
+              Valor descontado no Estudo de Viabilidade (se avançar em 90 dias)
+            </p>
+            <div class="mt-6 space-y-2.5">
+              <a
+                href={raioX.ctaHref}
+                data-track-cta="home_raiox_spotlight"
+                data-track-product="raio-x"
+                class="btn-terracotta w-full text-center"
+              >
+                {raioX.ctaLabel}
+              </a>
+              <a
+                href="/raio-x"
+                class="block text-center text-xs font-medium text-pine hover:underline py-1"
+              >
+                Ver tudo o que inclui o Raio-X →
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 4. O QUE ANALISAMOS (Grelha de 8 itens)                              -->
+  <!-- ==================================================================== -->
+  <section class="py-16 lg:py-24 bg-stone" aria-labelledby="analisamos-heading">
+    <div class="container-pmvp">
+      <div class="max-w-2xl mb-12">
+        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+          Rigor Cartográfico e Legal
+        </span>
+        <h2 id="analisamos-heading" class="mt-2 font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-pine">
+          O que analisamos
+        </h2>
+        <p class="mt-3 text-base text-graphite-muted">
+          Cruzamos as cartas municipais e nacionais com as características físicas da parcela para que nenhuma condicionante fique esquecida.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+        {whatWeAnalyze.map((item, index) => (
+          <div class="rounded-lg border border-border bg-white p-5 shadow-sm">
+            <div class="flex items-center gap-2.5 mb-2.5">
+              <span class="flex h-6 w-6 items-center justify-center rounded bg-pine text-white font-mono text-xs font-semibold">
+                {index + 1}
+              </span>
+              <h3 class="font-serif text-base font-semibold text-pine leading-snug">
+                {item.title}
+              </h3>
+            </div>
+            <p class="text-xs sm:text-sm text-graphite-muted leading-relaxed">
+              {item.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 5. PARA QUEM (4 cartões → páginas de segmento)                       -->
+  <!-- ==================================================================== -->
+  <section class="py-16 lg:py-24 bg-white border-b border-border" aria-labelledby="para-quem-heading">
+    <div class="container-pmvp">
+      <div class="max-w-2xl mb-12">
+        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+          Perfis de Cliente
+        </span>
+        <h2 id="para-quem-heading" class="mt-2 font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-pine">
+          Para quem trabalhamos
+        </h2>
+        <p class="mt-3 text-base text-graphite-muted">
+          Adaptamos a nossa análise ao momento e à decisão que tem em mãos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {segments.map((seg) => (
+          <a
+            href={seg.href}
+            class="group card-pmvp flex flex-col justify-between hover:border-pine hover:shadow-md"
+          >
+            <div>
+              <h3 class="font-serif text-xl font-semibold text-pine group-hover:text-terracotta transition-colors">
+                {seg.title}
+              </h3>
+              <p class="mt-3 text-sm sm:text-base text-graphite leading-relaxed">
+                "{seg.quote}"
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-border/60 flex items-center justify-between text-xs font-semibold text-pine">
+              <span>{seg.cta}</span>
+              <span class="transition-transform group-hover:translate-x-1">→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 6. COMO FUNCIONA (4 passos)                                          -->
+  <!-- ==================================================================== -->
+  <section class="py-16 lg:py-24 bg-stone/50 border-b border-border" aria-labelledby="como-funciona-heading">
+    <div class="container-pmvp">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <div class="max-w-2xl">
+          <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+            Processo Simples
+          </span>
+          <h2 id="como-funciona-heading" class="mt-2 font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-pine">
+            Como funciona
+          </h2>
+          <p class="mt-3 text-base text-graphite-muted">
+            Do pedido online à entrega do relatório técnico, sem deslocações desnecessárias.
+          </p>
+        </div>
+        <a href="/como-funciona" class="text-sm font-semibold text-pine hover:text-terracotta underline underline-offset-4">
+          Ver processo detalhado e documentos →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {steps.map((step) => (
+          <div class="relative rounded-lg border border-border bg-white p-6 shadow-sm">
+            <span class="font-mono text-2xl font-bold text-terracotta">
+              {step.num}
+            </span>
+            <h3 class="mt-3 font-serif text-lg font-semibold text-pine">
+              {step.title}
+            </h3>
+            <p class="mt-2 text-sm text-graphite-muted leading-relaxed">
+              {step.desc}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 7. PORQUÊ A PMVP (3 colunas)                                         -->
+  <!-- ==================================================================== -->
+  <section class="py-16 lg:py-24 bg-white" aria-labelledby="porque-pmvp-heading">
+    <div class="container-pmvp">
+      <div class="max-w-2xl mb-12">
+        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+          O Nosso Compromisso
+        </span>
+        <h2 id="porque-pmvp-heading" class="mt-2 font-serif text-2xl sm:text-3xl lg:text-4xl font-semibold text-pine">
+          Porquê a PMVP
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="rounded-lg border-l-4 border-pine bg-stone/40 p-6">
+          <h3 class="font-serif text-xl font-semibold text-pine">
+            Independência
+          </h3>
+          <p class="mt-3 text-sm sm:text-base text-graphite leading-relaxed">
+            Não prometemos potencial construtivo sem fundamento. Se não der, dizemos.
+          </p>
+        </div>
+
+        <div class="rounded-lg border-l-4 border-terracotta bg-stone/40 p-6">
+          <h3 class="font-serif text-xl font-semibold text-pine">
+            Conhecimento técnico
+          </h3>
+          <p class="mt-3 text-sm sm:text-base text-graphite leading-relaxed">
+            Experiência em gestão fundiária, licenciamento e legislação urbanística atualizada (RJUE, Simplex Urbanístico, regime dos solos).
+          </p>
+        </div>
+
+        <div class="rounded-lg border-l-4 border-pine bg-stone/40 p-6">
+          <h3 class="font-serif text-xl font-semibold text-pine">
+            Do estudo à concretização
+          </h3>
+          <p class="mt-3 text-sm sm:text-base text-graphite leading-relaxed">
+            Se houver viabilidade, acompanhamos o PIP junto da Câmara Municipal.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================================== -->
+  <!-- 8. FAQ + CTA FINAL                                                   -->
+  <!-- ==================================================================== -->
+  <FaqSection />
+
+  <section class="py-16 lg:py-20 bg-pine text-white text-center">
+    <div class="container-pmvp max-w-3xl space-y-6">
+      <h2 class="font-serif text-2xl sm:text-4xl font-semibold text-white">
+        Pronto para saber o que pode fazer com o seu terreno?
+      </h2>
+      <p class="text-base sm:text-lg text-stone/85">
+        Submeta a localização ou os dados do terreno em 2 minutos. Confirmamos a receção e enviamos proposta em até 24 horas úteis.
+      </p>
+      <div class="pt-2 flex flex-col sm:flex-row justify-center gap-4">
+        <a
+          href="/submeter-terreno"
+          data-track-cta="home_footer_cta"
+          data-track-product="geral"
+          class="btn-terracotta text-base px-8 py-3.5"
+        >
+          Analisar o meu terreno
+        </a>
+        <a
+          href="/servicos"
+          class="inline-flex items-center justify-center rounded-md border border-stone/40 px-6 py-3.5 text-base font-medium text-white hover:bg-pine-light transition-colors"
+        >
+          Comparar Raio-X e Estudo
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,119 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../config/site';
+---
+
+<BaseLayout
+  title="Quem Somos | PMVP — Terrenos & Urbanismo na Grande Lisboa"
+  description="Conheça a PMVP e os seus sócios Francisco Monteiro e Salvador Vaz Pinto. Consultoria técnica independente de terrenos, gestão fundiária e urbanismo na Grande Lisboa."
+>
+  <!-- Hero -->
+  <section class="py-12 sm:py-16 lg:py-20 bg-stone/70 border-b border-border">
+    <div class="container-pmvp max-w-4xl">
+      <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+        Sobre a {SITE_CONFIG.brand.name}
+      </span>
+      <h1 class="mt-2 font-serif text-3xl sm:text-5xl font-semibold text-pine">
+        Quem somos
+      </h1>
+      <p class="mt-6 text-lg sm:text-xl text-graphite leading-relaxed">
+        A PMVP nasceu para responder a uma pergunta simples que tem respostas complexas: <strong>o que se pode fazer com um terreno?</strong> Juntamos conhecimento técnico de gestão fundiária e licenciamento com uma abordagem clara e independente.
+      </p>
+      <p class="mt-4 text-sm sm:text-base text-graphite-muted leading-relaxed">
+        Atuamos na Grande Lisboa (<span class="placeholder-tag">{SITE_CONFIG.geography.pilotPlaceholder}</span>), apoiando proprietários, compradores, herdeiros e profissionais que precisam de decisões seguras baseadas na lei, na cartografia oficial e na realidade do mercado.
+      </p>
+    </div>
+  </section>
+
+  <!-- Sócios (2 cartões com foto, nome, papel e bio curta) -->
+  <section class="py-16 lg:py-24 bg-white border-b border-border" aria-labelledby="socios-heading">
+    <div class="container-pmvp max-w-5xl">
+      <div class="mb-12">
+        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+          Equipa Fundadora
+        </span>
+        <h2 id="socios-heading" class="mt-2 font-serif text-2xl sm:text-3xl font-semibold text-pine">
+          Os sócios
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {SITE_CONFIG.founders.map((founder) => (
+          <div class="card-pmvp flex flex-col justify-between">
+            <div>
+              <!-- Espaço para Fotografia do Sócio com Marcador Visível -->
+              <div class="aspect-[4/3] w-full rounded-lg bg-stone border border-border flex flex-col items-center justify-center p-6 text-center mb-6">
+                <div class="h-14 w-14 rounded-full bg-pine text-white flex items-center justify-center font-serif text-xl font-semibold mb-3">
+                  {founder.name
+                    .split(' ')
+                    .map((n) => n[0])
+                    .slice(0, 2)
+                    .join('')}
+                </div>
+                <span class="placeholder-tag">{founder.imagePlaceholder}</span>
+              </div>
+
+              <h3 class="font-serif text-2xl font-semibold text-pine">
+                {founder.name}
+              </h3>
+              <p class="mt-1 text-sm font-semibold text-terracotta">
+                {founder.role}
+              </p>
+
+              <div class="mt-4 rounded-md bg-stone/50 p-3.5 border border-border">
+                <span class="font-mono text-xs text-pine font-medium">
+                  {founder.bioPlaceholder}
+                </span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Valores -->
+  <section class="py-16 lg:py-24 bg-stone" aria-labelledby="valores-heading">
+    <div class="container-pmvp max-w-5xl">
+      <div class="mb-12">
+        <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+          Princípios
+        </span>
+        <h2 id="valores-heading" class="mt-2 font-serif text-2xl sm:text-3xl font-semibold text-pine">
+          Os nossos valores
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {SITE_CONFIG.values.map((val) => (
+          <div class="rounded-lg border border-border bg-white p-6 shadow-sm">
+            <h3 class="font-serif text-xl font-semibold text-pine">
+              {val.title}
+            </h3>
+            <p class="mt-2.5 text-sm text-graphite-muted leading-relaxed">
+              {val.description}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-14 rounded-xl bg-pine text-white p-8 sm:p-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+          <h3 class="font-serif text-2xl font-semibold text-white">
+            Fale connosco sobre o seu terreno
+          </h3>
+          <p class="mt-1 text-sm sm:text-base text-stone/85">
+            Analisamos o seu terreno com independência e rigor técnico.
+          </p>
+        </div>
+        <a
+          href="/submeter-terreno"
+          data-track-cta="sobre_cta"
+          class="btn-terracotta shrink-0"
+        >
+          Analisar o meu terreno
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

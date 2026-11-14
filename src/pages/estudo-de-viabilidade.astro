@@ -1,0 +1,182 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CartographicVisual from '../components/CartographicVisual.astro';
+import FaqSection from '../components/FaqSection.astro';
+import { SITE_CONFIG } from '../config/site';
+
+const { estudo, valor, raioX, pip } = SITE_CONFIG.products;
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: estudo.name,
+  provider: {
+    '@type': 'ProfessionalService',
+    name: `${SITE_CONFIG.brand.name} — ${SITE_CONFIG.brand.descriptor}`,
+  },
+  areaServed: SITE_CONFIG.geography.pilotDescription,
+  description: estudo.summary,
+  offers: {
+    '@type': 'Offer',
+    price: '1190.00',
+    priceCurrency: 'EUR',
+    description: `${estudo.priceDisplay} ${estudo.vatLabel} ${estudo.placeholderTag} — ${estudo.notes}`,
+  },
+};
+
+const includedItems = [
+  'Tudo o que está no Raio-X',
+  'Análise do regulamento do PDM e dos parâmetros urbanísticos aplicáveis',
+  'Sobreposição cartográfica completa de condicionantes (cartas de ordenamento e de condicionantes)',
+  'Verificação documental: cadastro / BUPi, artigo matricial, registo predial e divergências',
+  'Cenários possíveis de utilização, com limitações e riscos',
+  'Recomendação estratégica (PIP, venda, exploração agrícola, outra)',
+  'Relatório técnico completo + reunião de entrega (presencial ou vídeo)',
+];
+---
+
+<BaseLayout
+  title="Estudo de Viabilidade de Terrenos | PMVP — Grande Lisboa"
+  description="A análise técnica, regulamentar, cartográfica e documental completa para decidir com segurança o que fazer com o seu terreno na Grande Lisboa."
+  schema={serviceSchema}
+>
+  <!-- Hero -->
+  <section class="py-12 sm:py-16 lg:py-20 bg-stone/70 border-b border-border">
+    <div class="container-pmvp">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <span class="inline-block rounded-full bg-pine/10 px-3.5 py-1 text-xs font-semibold text-pine">
+            {estudo.badge} · Prazo: {estudo.turnaround}
+          </span>
+          <h1 class="font-serif text-3xl sm:text-5xl font-semibold text-pine">
+            {estudo.name}
+          </h1>
+          <p class="text-lg sm:text-xl text-graphite leading-relaxed">
+            A análise completa para decidir com segurança o que fazer com o terreno.
+          </p>
+          <p class="text-sm sm:text-base text-graphite-muted leading-relaxed">
+            Recomendado antes de assinar um CPCV, para fundamentar o preço de venda de um terreno, para apoiar partilhas de herança ou para preparar um Pedido de Informação Prévia (PIP) sólido.
+          </p>
+          <div class="pt-2 flex flex-col sm:flex-row gap-3.5">
+            <a
+              href={estudo.ctaHref}
+              data-track-cta="estudo_hero"
+              data-track-product="estudo"
+              class="btn-primary text-base px-7 py-3.5"
+            >
+              {estudo.ctaLabel}
+            </a>
+            <a href="/raio-x" class="btn-secondary text-base px-6 py-3.5">
+              Ou começar pelo Raio-X ({raioX.priceDisplay})
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <CartographicVisual
+            marker="[IMG: Sobreposição cartográfica de Planta de Ordenamento, Condicionantes e Polígono Cadastral]"
+            caption="Cruzamento de parâmetros urbanísticos do PDM com condicionantes e limites documentais."
+            variant="cadastral"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- O que inclui + Extra Estimativa de Valor + Bloco de Preço -->
+  <section class="py-16 lg:py-24 bg-white">
+    <div class="container-pmvp">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+        <div class="lg:col-span-7 space-y-8">
+          <div class="rounded-xl border border-pine/30 bg-stone/30 p-6 sm:p-8">
+            <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-pine">
+              O que inclui o Estudo de Viabilidade
+            </h2>
+            <ul class="mt-6 space-y-4">
+              {includedItems.map((item) => (
+                <li class="flex items-start gap-3">
+                  <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-pine text-white">
+                    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                  <span class="text-sm sm:text-base text-graphite font-medium">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <!-- Extra: Estimativa de valor por cenário -->
+          <div id="estimativa-valor" class="rounded-xl border-2 border-terracotta/40 bg-terracotta-muted/40 p-6 sm:p-8 scroll-mt-24">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <span class="rounded bg-terracotta px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-white">
+                Extra Opcional ao Estudo
+              </span>
+              <span class="font-serif text-xl font-semibold text-pine">
+                {valor.priceDisplay} <span class="text-xs font-sans font-normal text-graphite-muted">{valor.vatLabel}</span> <span class="placeholder-tag">{valor.placeholderTag}</span>
+              </span>
+            </div>
+            <h3 class="mt-3 font-serif text-xl sm:text-2xl font-semibold text-pine">
+              {valor.name}
+            </h3>
+            <p class="mt-2 text-sm sm:text-base text-graphite leading-relaxed">
+              Quanto vale hoje o terreno, e quanto pode valer com cada uso viável. Inclui análise comparativa de mercado na zona e valorização estimada por cenário urbanístico (prazo adicional: {valor.turnaround}).
+            </p>
+            <p class="mt-2 text-xs text-graphite-muted">
+              Nota: Estudo de mercado para apoio à decisão patrimonial ou negocial; não constitui avaliação bancária.
+            </p>
+          </div>
+        </div>
+
+        <!-- Bloco de Preço e "E depois?" -->
+        <div class="lg:col-span-5 space-y-6">
+          <div class="rounded-xl bg-pine text-white p-6 sm:p-8 shadow-md">
+            <span class="text-xs font-semibold uppercase tracking-wider text-stone/80">
+              Investimento e Condições
+            </span>
+            <div class="mt-2 flex flex-wrap items-baseline gap-2">
+              <span class="font-serif text-3xl sm:text-4xl font-semibold text-white">{estudo.priceDisplay}</span>
+              <span class="text-sm text-stone/85">{estudo.vatLabel}</span>
+              <span class="placeholder-tag bg-white/15 text-stone border-stone/30">{estudo.placeholderTag}</span>
+            </div>
+
+            <div class="mt-5 space-y-3 text-sm text-stone/90 leading-relaxed">
+              <p>• <strong>Prazo de execução:</strong> {estudo.turnaround}.</p>
+              <p>• O preço final depende da área, do número de artigos e da complexidade; <strong>recebe proposta fechada antes de avançar</strong>.</p>
+              <p>• Se realizou primeiro um Raio-X ({raioX.priceDisplay}), esse valor é integralmente descontado caso avance em 90 dias.</p>
+            </div>
+
+            <div class="mt-6">
+              <a
+                href={estudo.ctaHref}
+                data-track-cta="estudo_pricing_card"
+                data-track-product="estudo"
+                class="btn-terracotta w-full text-base py-3.5"
+              >
+                {estudo.ctaLabel}
+              </a>
+            </div>
+          </div>
+
+          <!-- Secção "E depois?" -->
+          <div class="rounded-xl border border-border bg-stone/50 p-6 sm:p-8">
+            <span class="text-xs font-semibold uppercase tracking-wider text-terracotta">
+              Concretização
+            </span>
+            <h3 class="mt-1 font-serif text-xl sm:text-2xl font-semibold text-pine">
+              E depois?
+            </h3>
+            <p class="mt-3 text-sm sm:text-base text-graphite leading-relaxed">
+              Se o estudo confirmar viabilidade construtiva, preparamos e acompanhamos o <strong>{pip.name}</strong> junto da Câmara Municipal, com arquitetos parceiros.
+            </p>
+            <a href="/servicos#pip" class="mt-4 inline-block text-sm font-semibold text-pine underline hover:text-terracotta">
+              Saber mais sobre o acompanhamento de PIP →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <FaqSection />
+</BaseLayout>

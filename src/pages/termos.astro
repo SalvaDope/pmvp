@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_CONFIG } from '../config/site';
+
+const { raioX, estudo } = SITE_CONFIG.products;
+---
+
+<BaseLayout
+  title="Termos e Condições do Serviço | PMVP — Terrenos & Urbanismo"
+  description="Termos e condições gerais de prestação dos serviços Raio-X do Terreno e Estudo de Viabilidade da PMVP."
+>
+  <section class="py-12 sm:py-16 bg-stone/60 border-b border-border">
+    <div class="container-pmvp max-w-4xl">
+      <span class="placeholder-tag">{SITE_CONFIG.legal.validationBanner}</span>
+      <h1 class="mt-3 font-serif text-3xl sm:text-4xl font-semibold text-pine">
+        Termos e Condições do Serviço
+      </h1>
+      <p class="mt-2 text-sm text-graphite-muted">
+        Condições aplicáveis aos serviços de análise técnica prestados pela PMVP — Terrenos & Urbanismo.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-12 sm:py-16 bg-white">
+    <div class="container-pmvp max-w-4xl space-y-8 text-sm sm:text-base text-graphite leading-relaxed">
+      <div class="rounded-lg border border-terracotta/40 bg-terracotta-muted/40 p-4 text-xs sm:text-sm text-terracotta-dark font-medium">
+        {SITE_CONFIG.legal.validationBanner}
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          1. Identificação do Prestador
+        </h2>
+        <p>
+          Os serviços descritos neste website são prestados por <span class="placeholder-tag">{SITE_CONFIG.contact.entity}</span>, NIF <span class="placeholder-tag">{SITE_CONFIG.contact.nif}</span>, com sede em <span class="placeholder-tag">{SITE_CONFIG.contact.address}</span> e contacto <span class="placeholder-tag">{SITE_CONFIG.contact.teamEmail}</span>.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          2. Natureza Informativa e Técnica dos Estudos (Não Vinculativos)
+        </h2>
+        <p>
+          Os relatórios elaborados pela PMVP (incluindo o <strong>{raioX.name}</strong>, o <strong>{estudo.name}</strong> e a <strong>Estimativa de valor por cenário</strong>) constituem análises técnicas independentes elaboradas com base na informação pública oficial disponível à data da sua emissão (PDM, cartas de condicionantes, DGT, BUPi) e nos elementos documentais fornecidos pelo cliente.
+        </p>
+        <p class="mt-2 font-medium text-pine">
+          Estes estudos têm natureza estritamente informativa e de apoio à decisão, não substituindo, em caso algum, um Pedido de Informação Prévia (PIP), parecer vinculativo ou decisão administrativa da Câmara Municipal ou de entidades da administração central, nem constituindo uma avaliação imobiliária bancária.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          3. Processo de Encomenda, Preços e Pagamento Antecipado
+        </h2>
+        <ul class="list-disc list-inside space-y-2">
+          <li>
+            Após a submissão do formulário online, a PMVP confirma em até 24 horas úteis se os elementos enviados são suficientes para identificar e analisar o terreno e envia a proposta aplicável e os dados de pagamento.
+          </li>
+          <li>
+            Os preços apresentados para consumidores incluem IVA à taxa legal em vigor (<span class="placeholder-tag">[a confirmar]</span>).
+          </li>
+          <li>
+            O início da execução do serviço depende da confirmação e do pagamento antecipado do valor acordado.
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          4. Prazos de Entrega
+        </h2>
+        <p>
+          Os prazos indicativos ({raioX.turnaround} para o {raioX.name}; {estudo.turnaround} para o {estudo.name}) contam-se em dias úteis a partir da data de receção do comprovativo de pagamento e da entrega de todos os elementos solicitados na confirmação do pedido.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          5. Política de Crédito do Raio-X no Estudo de Viabilidade
+        </h2>
+        <p>
+          Caso o cliente contrate um <strong>{raioX.name}</strong> ({raioX.priceDisplay}) e decida avançar para um <strong>{estudo.name}</strong> sobre o mesmo terreno no prazo máximo de <strong>90 dias seguidos</strong> a contar da data de entrega do relatório Raio-X, o valor pago pelo Raio-X será integralmente descontado no preço final do Estudo de Viabilidade.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          6. Limitação de Responsabilidade
+        </h2>
+        <p>
+          A PMVP desenvolve os seus trabalhos com elevado rigor técnico, mas não responde por inexatidões constantes das bases cartográficas públicas oficiais, por omissões ou divergências na documentação fornecida pelo cliente, por alterações legislativas ou regulamentares supervenientes, nem pelo sentido das decisões administrativas que venham a ser proferidas pelas Câmaras Municipais ou entidades externas. Em qualquer circunstância, a responsabilidade máxima da PMVP encontra-se limitada ao valor efetivamente pago pelo cliente pelo serviço em causa.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="font-serif text-xl sm:text-2xl font-semibold text-pine mb-2">
+          7. Lei Aplicável, Resolução Alternativa de Litígios e Foro
+        </h2>
+        <p>
+          Aos presentes Termos aplica-se a lei portuguesa. {SITE_CONFIG.legal.ralNotice} Para todas as questões emergentes do contrato que não sejam resolvidas por via arbitral ou extrajudicial, é competente o foro da comarca de Lisboa, sem prejuízo das normas imperativas aplicáveis a consumidores.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

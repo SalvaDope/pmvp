@@ -1,0 +1,124 @@
+---
+import { SITE_CONFIG } from '../config/site';
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-border bg-pine text-stone">
+  <div class="container-pmvp py-12 lg:py-16">
+    <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
+      <!-- Coluna 1: Marca & Slogan -->
+      <div class="lg:col-span-2 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="flex h-10 w-10 items-center justify-center rounded bg-stone text-pine font-serif font-bold text-lg">
+            PM
+          </div>
+          <div>
+            <div class="font-serif text-xl font-semibold text-white">
+              {SITE_CONFIG.brand.name}
+            </div>
+            <div class="text-xs text-stone/80">
+              {SITE_CONFIG.brand.descriptor} · {SITE_CONFIG.brand.descriptorAlt}
+            </div>
+          </div>
+        </div>
+        <p class="text-sm text-stone/90 max-w-sm font-serif italic">
+          "{SITE_CONFIG.brand.slogan}"
+        </p>
+        <div class="text-xs text-stone/75 space-y-1.5 pt-2">
+          <p><strong class="text-white">Zona de atuação:</strong> {SITE_CONFIG.geography.pilotDescription}</p>
+          <p><strong class="text-white">E-mail:</strong> <span class="font-mono text-terracotta-light">{SITE_CONFIG.contact.teamEmail}</span></p>
+          <p><strong class="text-white">Telemóvel:</strong> <span class="font-mono text-terracotta-light">{SITE_CONFIG.contact.phone}</span></p>
+          <p><strong class="text-white">Morada:</strong> <span class="font-mono text-terracotta-light">{SITE_CONFIG.contact.address}</span></p>
+          <p><strong class="text-white">NIF:</strong> <span class="font-mono text-terracotta-light">{SITE_CONFIG.contact.nif}</span> · <strong class="text-white">Entidade:</strong> <span class="font-mono text-terracotta-light">{SITE_CONFIG.contact.entity}</span></p>
+        </div>
+      </div>
+
+      <!-- Coluna 2: Serviços -->
+      <div>
+        <h3 class="font-sans text-xs font-semibold uppercase tracking-wider text-white mb-4">
+          Serviços
+        </h3>
+        <ul class="space-y-2.5 text-sm text-stone/85">
+          <li><a href="/raio-x" class="hover:text-white transition-colors">Raio-X do Terreno (190 €)</a></li>
+          <li><a href="/estudo-de-viabilidade" class="hover:text-white transition-colors">Estudo de Viabilidade</a></li>
+          <li><a href="/estudo-de-viabilidade#estimativa-valor" class="hover:text-white transition-colors">Estimativa de Valor</a></li>
+          <li><a href="/servicos#pip" class="hover:text-white transition-colors">Pedido de Informação Prévia (PIP)</a></li>
+          <li><a href="/servicos" class="hover:text-white transition-colors">Comparar serviços</a></li>
+          <li><a href="/submeter-terreno" class="text-terracotta-light font-medium hover:underline">Analisar o meu terreno →</a></li>
+        </ul>
+      </div>
+
+      <!-- Coluna 3: Para quem & Empresa -->
+      <div>
+        <h3 class="font-sans text-xs font-semibold uppercase tracking-wider text-white mb-4">
+          Para quem & PMVP
+        </h3>
+        <ul class="space-y-2.5 text-sm text-stone/85">
+          <li><a href="/para-quem/comprar" class="hover:text-white transition-colors">Vai comprar um terreno</a></li>
+          <li><a href="/para-quem/heranca" class="hover:text-white transition-colors">Herdou um terreno</a></li>
+          <li><a href="/para-quem/vender" class="hover:text-white transition-colors">Quer vender um terreno</a></li>
+          <li><a href="/parceiros" class="hover:text-white transition-colors">Profissionais e Parceiros</a></li>
+          <li><a href="/como-funciona" class="hover:text-white transition-colors">Como funciona</a></li>
+          <li><a href="/sobre" class="hover:text-white transition-colors">Quem somos</a></li>
+          <li><a href="/recursos" class="hover:text-white transition-colors">Recursos e artigos</a></li>
+        </ul>
+      </div>
+
+      <!-- Coluna 4: Legal & Regulamentar -->
+      <div>
+        <h3 class="font-sans text-xs font-semibold uppercase tracking-wider text-white mb-4">
+          Informação Legal
+        </h3>
+        <ul class="space-y-2.5 text-sm text-stone/85">
+          <li><a href="/privacidade" class="hover:text-white transition-colors">Política de Privacidade</a></li>
+          <li><a href="/cookies" class="hover:text-white transition-colors">Política de Cookies</a></li>
+          <li><a href="/termos" class="hover:text-white transition-colors">Termos e Condições</a></li>
+          <li>
+            <button
+              type="button"
+              data-open-cookie-settings
+              class="text-left text-stone/85 hover:text-white underline decoration-stone/40 underline-offset-4 transition-colors"
+            >
+              Configurar Cookies (RGPD)
+            </button>
+          </li>
+          <li class="pt-2">
+            <a
+              href={SITE_CONFIG.legal.complaintsBookUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 rounded border border-stone/30 bg-pine-dark px-3 py-1.5 text-xs font-medium text-white hover:border-stone transition-colors"
+            >
+              <span>Livro de Reclamações Eletrónico</span>
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Informação RAL e Direitos -->
+    <div class="mt-10 border-t border-stone/20 pt-8 text-xs text-stone/70 space-y-4">
+      <div class="rounded bg-pine-dark/70 p-4 border border-stone/15">
+        <p class="font-semibold text-stone/90 mb-1">
+          Resolução Alternativa de Litígios de Consumo (RAL)
+        </p>
+        <p class="leading-relaxed">
+          {SITE_CONFIG.legal.ralNotice}
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
+        <p>
+          © {currentYear} {SITE_CONFIG.brand.name} — {SITE_CONFIG.brand.descriptor}. Todos os direitos reservados. Domínio: <span class="font-mono text-terracotta-light">{SITE_CONFIG.contact.domain}</span>
+        </p>
+        <p class="text-[11px] text-stone/60">
+          Os estudos da PMVP têm natureza técnica informativa e não substituem decisão municipal vinculativa (PIP).
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>

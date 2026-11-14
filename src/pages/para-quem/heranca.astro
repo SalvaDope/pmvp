@@ -1,0 +1,57 @@
+---
+import SegmentPageLayout from '../../components/SegmentPageLayout.astro';
+import { SITE_CONFIG } from '../../config/site';
+
+const { estudo, valor } = SITE_CONFIG.products;
+---
+
+<SegmentPageLayout
+  metaTitle="Herdou um Terreno? Perceba o que Permite e Quanto Vale | PMVP"
+  metaDescription="Herdou um terreno na Grande Lisboa? Identificamos os limites, verificamos a documentação, analisamos o PDM e estimamos o valor por cenário antes da partilha ou venda."
+  badge="Para quem herdou um terreno"
+  h1="Herdou um terreno? Perceba o que tem antes de decidir."
+  lead="Quando uma família recebe um terreno por herança, raramente existe informação clara sobre onde ficam os limites exatos, o que o PDM permite fazer e qual o seu valor real de mercado."
+  imageMarker="[IMG: Identificação cartográfica e documental de terreno de herança]"
+  perfilId="heranca"
+  pains={[
+    {
+      title: 'Documentação desatualizada ou divergente',
+      description:
+        'Cadernetas prediais antigas, descrições em falta na Conservatória, ausência de georreferenciação no BUPi ou áreas que não batem certo entre si.',
+    },
+    {
+      title: 'Herdeiros com opiniões diferentes sobre o valor',
+      description:
+        'Sem uma base técnica imparcial, alguns herdeiros sobrestimam o potencial construtivo enquanto outros receiam vender abaixo do valor justo.',
+    },
+    {
+      title: 'Não saber se vale a pena vender, construir ou manter',
+      description:
+        'Decidir uma partilha ou colocar o terreno no mercado sem conhecer os usos viáveis pode significar perder uma parte substancial do valor patrimonial.',
+    },
+  ]}
+  howWeHelp={[
+    {
+      title: 'Verificação documental e cadastral rigorosa',
+      description:
+        'Cruzamos a Caderneta Predial, o Registo Predial e o cadastro oficial / BUPi para clarificar a situação jurídica e física da parcela.',
+    },
+    {
+      title: 'Leitura completa de usos e condicionantes',
+      description:
+        'Determinamos se o terreno tem capacidade construtiva (habitação, atividades económicas, turismo) ou aptidão agrícola/florestal.',
+    },
+    {
+      title: 'Relatório claro para todos os herdeiros',
+      description:
+        'Entregamos um documento independente e fundamentado, acompanhado de reunião de explicação, para que todos decidam com a mesma informação.',
+    },
+  ]}
+  recommendedTitle="Estudo de Viabilidade + Estimativa de valor"
+  recommendedDescription="Combina o diagnóstico urbanístico e documental completo com uma estimativa de valor de mercado por cenário — quanto vale hoje o terreno e quanto pode valer em cada utilização viável."
+  recommendedPrice={`Estudo ${estudo.priceDisplay} + Estimativa de valor ${valor.priceDisplay} (IVA incl.) ${estudo.placeholderTag}`}
+  primaryCtaLabel="Analisar terreno de herança"
+  primaryCtaHref="/submeter-terreno?perfil=heranca&produto=estudo"
+  secondaryCtaLabel="Começar pelo Raio-X (190 €)"
+  secondaryCtaHref="/submeter-terreno?perfil=heranca&produto=raio-x"
+/>
